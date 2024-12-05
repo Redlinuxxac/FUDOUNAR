@@ -1,0 +1,100 @@
+/* fudounar.css *//* General Styles */
+body {
+    /*background-color: #009E60;  Verde de la bandera dominicana */
+    margin: 0; /* Remove default margin for better control */
+    font-family: Arial, sans-serif; /* Set a default font for the body */
+  }
+.section-aruba {
+    background-color: #F8981F; /* Naranja de la bandera de Aruba */
+}
+  
+  /* Header Styles */
+  header#header {
+    display: flex; /* Make header a flexbox for horizontal layout */
+    justify-content: space-between; /* Align items horizontally */
+    align-items: center; /* Align items vertically */
+    padding: 1rem; /* Add some padding for content spacing */
+    /* background-color: #C83800; Use Dominican Republic flag green */
+  }
+  
+  .logo {
+    font-size: 1.5rem; /* Increase logo font size */
+    text-decoration: none; /* Remove underline from logo link */
+  }
+  
+  /* Navigation (Menu) Styles */
+  nav {
+    display: ; /* Initially hide the navigation */
+  }
+  
+  /* Responsive Navigation Styles */
+  @media (max-width: 768px) { /* Target screens smaller than 768px */
+    nav {
+      display: block; /* Show navigation on smaller screens */
+      position: fixed; /* Fix navigation to the top */
+      top: 0; /* Position navigation at the top of the screen */
+      left: 0; /* Position navigation at the left of the screen */
+      width: 100%; /* Make navigation full width */
+      height: 100vh; /* Make navigation full viewport height */
+      background-color: #F8981F; /* Use Aruba flag orange */
+      transition: all 0.3s ease-in-out; /* Add smooth transition for opening/closing */
+    }
+  
+    nav.active { /* Style for active navigation (opened) */
+      transform: translateX(0); /* Move navigation to the left (visible) */
+    }
+  
+    a[href="#menu"] { /* Style for menu toggle link */
+      display: block; /* Make toggle link visible */
+      position: fixed; /* Fix toggle link to top right */
+      top: 1rem;
+      right: 1rem;
+      z-index: 10; /* Set higher z-index for toggle link to be above content */
+      color: #fff; /* Use white text for better contrast */
+      font-size: 1.5rem; /* Increase toggle link font size */
+    }
+  }
+  
+  /* Menu List Styles */
+  nav ul.links {
+    list-style: none; /* Remove default list style */
+    padding: 0; /* Remove default padding */
+    margin: 0 auto; /* Center the menu list horizontally */
+  }
+  
+  nav ul.links li {
+    margin: 1rem 0; /* Add space between menu items */
+  }
+  
+  /**/
+
+  /* Estilos para el menú horizontal a la izquierda */
+nav ul.links {
+    display: flex; /* Hacemos el menú un flexbox para distribuir los elementos horizontalmente */
+    flex-direction: column; /* Por defecto, los elementos de flexbox se apilan verticalmente, pero aquí los colocamos en una columna */
+    align-items: flex-start; /* Alineamos los elementos al inicio (izquierda) */
+    background-color: #F8981F; /* Color de fondo del menú (naranja de Aruba) */
+    padding: 1rem; /* Espacio interno del menú */
+  }
+  
+  nav ul.links li {
+    margin: 0; /* Quitamos el margen superior e inferior para que los elementos estén juntos */
+    padding: 0.5rem; /* Agregamos un poco de padding a cada elemento */
+  }
+  
+  
+  
+  nav ul.links a {
+    color: #fff; /* Use white text for better contrast */
+    text-decoration: none; /* Remove underline from links */
+    font-size: 1rem; /* Set font size for menu links */
+  }
+  
+  /* Estilos adicionales para pantallas más pequeñas (responsividad) */
+  @media (max-width: 768px) {
+    /* Si necesitas un menú desplegable en pantallas pequeñas, puedes agregar aquí los estilos correspondientes */
+    /* Por ejemplo: */
+    nav ul.links {
+      flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
+    }
+  }
