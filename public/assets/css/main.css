@@ -13,7 +13,7 @@ header {
   align-items: center;
 }
 header img {
-  height350px;
+  /* height:350px; */
   height: auto;
   width: 350px;
 }
@@ -69,4 +69,20 @@ footer {
   background-size: random(30px, 70px) random(30px, 70px);
   background-position: random(-10px, 10px) random(-10px, 10px);
   background-repeat: repeat;
+}
+
+.row {
+  display: flex; /* Establecemos el contenedor como un contenedor flex */
+  flex-direction: row; /* Organizamos los elementos en filas */
+  justify-content: space-between; /* Distribuye los elementos con espacio entre ellos */
+  border-bottom: 4px dotted gray;
+}
+
+.row .noti img {
+  float: left; /* Hace que la imagen flote a la derecha */
+  margin: 10px; /* Añade un margen alrededor de la imagen */
+}
+
+.row .noti p {
+  text-align: justify; /* Justifica el texto del párrafo */
 }
