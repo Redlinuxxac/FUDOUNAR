@@ -26,14 +26,21 @@ class PostResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('body')
+                Forms\Components\RichEditor::make('body')
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('user_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                Forms\Components\Select::make('status')
+                ->label(__('config.post.status'))
+                ->searchable()
+                ->options([
+                                'draft'    => __('config.post.post_status.draft'), 
+                                'preview' => __('config.post.post_status.preview'), 
+                                'public'   => __('config.post.post_status.public')
+                            ])
+                ->required(),
             ]);
     }
 
