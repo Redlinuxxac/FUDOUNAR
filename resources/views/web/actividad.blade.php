@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    Inicio
+    Actividades
 @endsection
 @section('menu')
     @include('menu', ['lugar' => 'Inicio'])
