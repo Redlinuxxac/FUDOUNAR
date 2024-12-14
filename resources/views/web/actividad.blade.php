@@ -6,6 +6,7 @@
     @include('menu', ['lugar' => 'Inicio'])
 @endsection
 @section('content')
+proxima activadad
 <div class="row">
     <div class="noti">
         <h1>Bienvenido a Fudcounar</h1>
