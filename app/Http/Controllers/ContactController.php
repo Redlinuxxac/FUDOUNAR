@@ -1,14 +1,16 @@
 <?php
 
+namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 
 
 class ContactController extends Controller
 {
     public function create()
     {
-        return view('contact');
+        return view('web.contact');
     }
 
     public function store(Request $request)
@@ -22,7 +24,7 @@ class ContactController extends Controller
 
         // Enviar el correo electrónico
         Mail::send('emails.contact', ['data' => $request->all()], function($message) use ($request) {
-            $message->to('tu_email@example.com', 'Tu Nombre')
+            $message->to('info@fudounar.org', 'fudounar')
                     ->subject('Nuevo Mensaje de Contacto');
         });
 
