@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>Fudcounar ! @yield('title') </title>
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/fudounar.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/fudounar.css') }}">
 </head>
 <body>
     <header id="header">
