@@ -86,3 +86,7 @@ footer {
 .row .noti p {
   text-align: justify; /* Justifica el texto del párrafo */
 }
+
+a.active{
+  text-decoration:underline 2px red !important;
+}
