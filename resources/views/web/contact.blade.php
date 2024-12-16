@@ -6,6 +6,7 @@
     @include('menu', ['lugar' => 'Inicio'])
 @endsection
 @section('content')
+<h1>Ubicacion</h1>
 <h1>Contáctanos</h1>
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
