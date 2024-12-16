@@ -11,10 +11,5 @@ Route::get('/Actividad', function () {
     return view('web.actividad');
 })->name('Actividad');
 
-/* Route::get('/contact', function () {
-    return view('web.contact');
-})->name('contact'); */
-
-
 Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
