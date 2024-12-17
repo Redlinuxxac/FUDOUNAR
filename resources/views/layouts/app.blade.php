@@ -21,7 +21,7 @@
     </main>
 
     <footer>
-        <p>&copy; Fudcounar 2023</p>
+        <p>&copy; FUDCOUNAR 2023</p>
     </footer>
 
     <script src="assets/js/script.js"></script>
