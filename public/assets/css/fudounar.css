@@ -23,9 +23,7 @@ body {
   }
   
   /* Navigation (Menu) Styles */
-  nav {
-    display: ; /* Initially hide the navigation */
-  }
+
   
   /* Responsive Navigation Styles */
   @media (max-width: 768px) { /* Target screens smaller than 768px */
@@ -120,30 +118,3 @@ nav ul.links {
     width: 100%;
     text-decoration:underline;
   }
-
-  
-.form-control {
-  width: 100%;
-}
-
-.form-group textarea.form-control {
-  height: 150px; /* Adjust the height as needed */
-}
-
-.btn-primary {
-  background-color: #007bff; /* Blue color for the button */
-  border-color: #007bff;
-}
-/* centrado */
-/* Option 1: Using margin */
-main {
-  margin: 0 auto;
-  width: fit-content;
-}
-
-/* Option 2: Using flexbox */
-main {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
