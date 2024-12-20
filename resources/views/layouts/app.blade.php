@@ -21,7 +21,7 @@
     </main>
 
     <footer>
-        <p>&copy; FUDCOUNAR 2023</p>
+        <p>&copy; FUDOUNAR 2023</p>
     </footer>
     @yield('script')
     <script src="assets/js/script.js"></script>
