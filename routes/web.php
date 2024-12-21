@@ -14,5 +14,5 @@ Route::get('/Actividad', function () {
 Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/quienes_somos', function () {
-    return view('web.quenesomos');
-})->name('contact.create');
+ return view('web.quenesomos');
+})->name('quienes.somos');
