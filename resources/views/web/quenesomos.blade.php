@@ -10,13 +10,15 @@
     <h2>Quiénes Somos</h2>
     <p>
         <h1>Nuestra misión es</h1>
+        <img src="{{ asset('img/Mision.jpeg') }}" alt="Mision">
         <p>Frase concisa y clara que exprese el propósito principal de la fundación. Ejemplo: "Nuestra misión es mejorar la calidad de vida de las comunidades marginadas a través de la educación, la salud y el desarrollo sostenible."</p>
         <h1>Nuestra visión es</h1>
+        <img src="{{ asset('img/Vision.jpeg') }}" alt="Vision">
         <p>Descripción inspiradora del futuro que la fundación desea crear. Ejemplo: "Vislumbramos un mundo donde todas las personas tengan acceso a oportunidades equitativas y puedan alcanzar su máximo potencial."</p>
         <h1>Nuestros valores son</h1>
+        <img src="{{ asset('img/Valores.jpeg') }}" alt="Valores">
         <p>Lista de los principios fundamentales que guían las acciones de la fundación. Ejemplo: "Integridad, solidaridad, excelencia, respeto, innovación."</p>
     </p>
-    <img src="{{ asset('img/imagen_equipo.jpg') }}" alt="Nuestro equipo">
 </section>
 <section id="nuestra-historia">
     <h2>Nuestra Historia</h2>
@@ -25,6 +27,7 @@
 </section>
 <section>
     <h1>Nuestro Equipo</h1>
+    <img src="{{ asset('img/imagen_equipo.jpg') }}" alt="Nuestro equipo">
     <p>Presentaciones breves de los miembros clave del equipo, destacando sus roles, experiencia y pasiones.
     Fotos de los miembros del equipo para crear un ambiente más cercano.</p>
 </section>
