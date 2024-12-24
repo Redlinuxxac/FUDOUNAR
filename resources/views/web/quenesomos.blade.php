@@ -6,7 +6,7 @@
     @include('menu', ['lugar' => 'Inicio'])
 @endsection
 @section('content')
-<section id="quienes-somos"  class="row">
+<section id="quienes-somos">
     <h2>Quiénes Somos</h2>
     <p>
         <h1>Nuestra misión es</h1>
