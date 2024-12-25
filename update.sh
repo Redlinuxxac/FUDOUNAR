@@ -5,17 +5,26 @@ get_latest_tag() {
   git ls-remote --tags origin | grep -oP 'refs/tags/\K(.*)' | sort -V | tail -n 1
 }
 
-# Obtener la última etiqueta remota
-latest_tag=$(get_latest_tag)
-
-# Obtener la etiqueta local (si existe)
+# Obtener las últimas etiquetas
+latest_remote_tag=$(get_latest_tag)
 local_tag=$(git describe --tags --abbrev=0 2>/dev/null)
 
+# Mostrar información detallada de las versiones
+echo "Versión remota actual: $latest_remote_tag"
+echo "Versión local actual: $local_tag"
+
 # Comparar y actualizar si es necesario
-if [[ -z "$local_tag" || "$local_tag" != "$latest_tag" ]]; then
-  echo "La versión local está desactualizada. Actualizando..."
-  git fetch origin
-  git checkout $latest_tag
+if [[ -z "$local_tag" || "$local_tag" != "$latest_remote_tag" ]]; then
+  echo "La versión local está desactualizada. Se actualizará a $latest_remote_tag."
+  echo "Deseas continuar? (s/n)"
+  read -r update
+  if [[ $update == "s" || $update == "S" ]]; then
+    git fetch origin
+    git checkout $latest_remote_tag
+    echo "Actualización completada."
+  else
+    echo "Se ha cancelado la actualización."
+  fi
 else
   echo "La versión local está actualizada."
 fi
