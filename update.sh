@@ -11,6 +11,7 @@ local_tag=$(git describe --tags --abbrev=0 2>/dev/null)
 
 # Mostrar información detallada de las versiones
 echo "Versión remota actual: $latest_remote_tag"
+#version local
 echo "Versión local actual: $local_tag"
 
 # Comparar y actualizar si es necesario
