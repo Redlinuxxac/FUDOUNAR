@@ -54,7 +54,13 @@
     Facilitar el proceso de donación con botones o enlaces claros.</p>
 </section>
 @endsection
+@section('footer')
+<footer>
+    <p>&copy; FUDOUNAR 2023</p>
+</footer>
+@endsection
 @section('script')
+<script src="assets/js/script.js"></script>
 <script>
     // Replace 'YOUR_LOCATION_NAME' with the actual location you want to display on the map
     //document.getElementById("gmap_iframe").src = "https://www.google.com/maps/embed?pb=!1m18&q=" + encodeURIComponent('YOUR_LOCATION_NAME') + "&zoom=15&output=embed";

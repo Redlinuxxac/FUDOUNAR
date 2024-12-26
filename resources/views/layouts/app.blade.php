@@ -19,11 +19,7 @@
     <main>
         @yield('content')  
     </main>
-
-    <footer>
-        <p>&copy; FUDOUNAR 2023</p>
-    </footer>
+    @yield('footer')
     @yield('script')
-    <script src="assets/js/script.js"></script>
 </body>
 </html>
