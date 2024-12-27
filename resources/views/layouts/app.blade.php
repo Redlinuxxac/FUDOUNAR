@@ -20,6 +20,7 @@
         @yield('content')  
     </main>
     @yield('footer')
+    
     @yield('script')
 </body>
 </html>
