@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Fudcounar ! @yield('title') </title>
+    <title>FUDOUNAR ! @yield('title') </title>
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/fudounar.css') }}">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -20,7 +20,7 @@
         @yield('content')  
     </main>
     @yield('footer')
-    
+
     @yield('script')
 </body>
 </html>
