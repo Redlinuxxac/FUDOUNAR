@@ -8,7 +8,7 @@
 </head>
 <body>
     <header id="header">
-        <img src="img/logo.jpg" alt="Logo Fudcounar">
+        <img src="{{ asset('img/logo.jpg') }}" alt="Logo Fudcounar">
             @yield('menu')
     </header>
     <div class="contenedor">
