@@ -16,15 +16,9 @@ echo "Versión local actual: $local_tag"
 # Comparar y actualizar si es necesario
 if [[ -z "$local_tag" || "$local_tag" != "$latest_remote_tag" ]]; then
   echo "La versión local está desactualizada. Se actualizará a $latest_remote_tag."
-  echo "Deseas continuar? (s/n)"
-  read -r update
-  if [[ $update == "s" || $update == "S" ]]; then
     git fetch origin
     git checkout $latest_remote_tag
     echo "Actualización completada."
-  else
-    echo "Se ha cancelado la actualización."
-  fi
 else
   echo "La versión local está actualizada."
 fi
