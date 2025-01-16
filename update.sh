@@ -35,6 +35,8 @@ echo "Versión local actual: $local_version"
     # Actualizar al repositorio remoto
     echo "La versión local está desactualizada. Se actualizará a $remote_version."
     git fetch origin
+    # Une los cambios locales con los remotos de la rama master
+    git pull origin master
     git checkout $remote_version
     # Guardar la nueva versión
     save_version "$remote_version"
