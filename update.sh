@@ -1,24 +1,46 @@
 #!/bin/bash
-# Función para obtener la última etiqueta
-get_latest_tag() {
-  git ls-remote --tags origin | grep -oP 'refs/tags/\K(.*)' | sort -V | tail -n 1
+
+# Función para obtener la versión del repositorio remoto
+get_remote_version() {
+  version=$( git ls-remote --tags origin | grep -oP 'refs/tags/\K(.*)' | sort -V | tail -n 1)
+  echo "$version"
 }
 
-# Obtener las últimas etiquetas
-latest_remote_tag=$(get_latest_tag)
-local_tag=$(git describe --tags --abbrev=0 2>/dev/null)
+# Función para guardar la versión en el archivo version.red
+save_version() {
+  version="$1"
+  echo "$version" > version.red
+}
+
+# Obtener la versión actual del repositorio remoto
+remote_version=$(get_remote_version)
+
+
+# Verificar si existe el archivo version.red
+if [ ! -f version.red ]; then
+  # Crear el archivo y guardar la versión actual
+  save_version "$remote_version"
+  echo "Archivo version.red creado y versión inicializada."
+else
+  # Leer la versión del archivo
+  local_version=$(cat version.red)
 
 # Mostrar información detallada de las versiones
-echo "Versión remota actual: $latest_remote_tag"
+echo "Versión remota actual: $remote_version"
 #version local
-echo "Versión local actual: $local_tag"
+echo "Versión local actual: $local_version"
 
-# Comparar y actualizar si es necesario
-if [[ -z "$local_tag" || "$local_tag" != "$latest_remote_tag" ]]; then
-  echo "La versión local está desactualizada. Se actualizará a $latest_remote_tag."
+  # Comparar versiones
+  if [ "$local_version" \< "$remote_version" ]; then
+    # Actualizar al repositorio remoto
+    echo "La versión local está desactualizada. Se actualizará a $remote_version."
     git fetch origin
-    git checkout $latest_remote_tag
+    git checkout $remote_version
+    # Guardar la nueva versión
+    save_version "$remote_version"
+    echo "Repositorio actualizado a la versión $remote_version."
     echo "Actualización completada."
-else
-  echo "La versión local está actualizada."
+  else
+    echo "El repositorio local está actualizado."
+  fi
 fi
