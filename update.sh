@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Función para obtener la última etiqueta
 get_latest_tag() {
   git ls-remote --tags origin | grep -oP 'refs/tags/\K(.*)' | sort -V | tail -n 1
