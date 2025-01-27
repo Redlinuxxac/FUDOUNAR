@@ -34,12 +34,12 @@ echo "Versión local actual: $local_version"
   if [ "$local_version" \< "$remote_version" ]; then
     # Actualizar al repositorio remoto
     echo "La versión local está desactualizada. Se actualizará a $remote_version."
-    git fetch origin
+    #git fetch origin
     # Une los cambios locales con los remotos de la rama master
-    git pull origin master
-    git checkout $remote_version
+    #git pull origin master
+    #git checkout $remote_version
     # Guardar la nueva versión
-    save_version "$remote_version"
+    save_version "$remote_version D4"
     echo "Repositorio actualizado a la versión $remote_version."
     echo "Actualización completada."
   else

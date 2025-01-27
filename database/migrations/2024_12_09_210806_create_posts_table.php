@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();  // Incrementing ID primary key
             $table->string('title');  // String field for the post title
+            $table->string('imagen'); // Nombre original del archivo
             $table->text('body');  // Text field for the post content
             $table->unsignedBigInteger('user_id');   // Unsigned big integer for the user ID who created the post
             $table->foreign('user_id')->references('id')->on('users');  // Foreign key constraint referencing the 'users' table
-            $table->enum('status',  ['draft', 'preview', 'public'])->default('draft');  // Enum field for the post status (draft or published)
+            $table->enum('status',  ['draft', 'preview', 'published'])->default('draft');  // Enum field for the post status (draft or published)
             $table->timestamps();   // Timestamps for created_at and updated_at columns
         });
     }

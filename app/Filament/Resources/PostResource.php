@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Columns\ImageColumn;
 
 class PostResource extends Resource
 {
@@ -26,21 +28,25 @@ class PostResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\RichEditor::make('body')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
                 Forms\Components\Select::make('status')
                 ->label(__('config.post.status'))
                 ->searchable()
                 ->options([
                                 'draft'    => __('config.post.post_status.draft'), 
                                 'preview' => __('config.post.post_status.preview'), 
-                                'public'   => __('config.post.post_status.public')
+                                'published'   => __('config.post.post_status.public')
                             ])
                 ->required(),
+                FileUpload::make('imagen')
+                ->image()
+                ->directory('post')
+                ->imageEditor(), // Add morphing for polymorphic relationship
+                Forms\Components\RichEditor::make('body')
+                    ->required()
+                    ->columnSpanFull(),/* 
+                Forms\Components\TextInput::make('user_id')
+                    ->required()
+                    ->numeric(), */
             ]);
     }
 
@@ -53,6 +59,7 @@ class PostResource extends Resource
                 Tables\Columns\TextColumn::make('user_id')
                     ->numeric()
                     ->sortable(),
+                    ImageColumn::make('imagen'),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
