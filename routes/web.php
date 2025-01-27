@@ -16,3 +16,5 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 Route::get('/quienes_somos', function () {
  return view('web.quenesomos');
 })->name('quienes.somos');
+
+//filament.admin.resources.posts.create › App\Filament\Resources\PostResource\Pages\CreatePost

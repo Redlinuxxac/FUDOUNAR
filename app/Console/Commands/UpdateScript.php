@@ -25,6 +25,9 @@ class UpdateScript extends Command
      */
     public function handle()
     {
+        $output = substr(shell_exec("git ls-remote --tags origin | grep -oP 'refs/tags/\K(.*)' | sort -V | tail -n 1"),0, -4);
+        echo $output;
+        /* 
         // Ejecuta el script y captura la salida
         $output = shell_exec('./update.sh');
 
@@ -36,6 +39,6 @@ class UpdateScript extends Command
         if (!empty($matches)) {
             $this->info('Simulando respuesta "s"');
             $this->call('shell', ['command' => 'echo s']);
-        }
+        } */
     }
 }
