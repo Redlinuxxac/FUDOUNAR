@@ -23,4 +23,5 @@ yarn-error.log
 /.vscode
 /.zed
 version.red
+bitagora.red
 ./update.sh

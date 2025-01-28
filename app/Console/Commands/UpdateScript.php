@@ -25,20 +25,43 @@ class UpdateScript extends Command
      */
     public function handle()
     {
-        $output = substr(shell_exec("git ls-remote --tags origin | grep -oP 'refs/tags/\K(.*)' | sort -V | tail -n 1"),0, -4);
-        echo $output;
-        /* 
-        // Ejecuta el script y captura la salida
-        $output = shell_exec('./update.sh');
+        // Obtener la última versión remota
+        $verRemota = substr(shell_exec("git ls-remote --tags origin | grep -oP 'refs/tags/\K(.*)' | sort -V | tail -n 1"),0, -4);
+        echo "versiòn remota: ";
+        echo $verRemota;
 
-        // Busca la línea donde se pide la confirmación
-        $pattern = '/[Ss] para continuar/'; // Ajusta la expresión regular según la pregunta exacta
-        preg_match($pattern, $output, $matches, PREG_OFFSET_CAPTURE);
+        // Nombre del archivo
+        $archivo = "version.red";
 
-        // Si se encontró la pregunta, simula la respuesta "s"
-        if (!empty($matches)) {
-            $this->info('Simulando respuesta "s"');
-            $this->call('shell', ['command' => 'echo s']);
-        } */
+        // Nueva versión a escribir (ajusta según sea necesario)
+        $nueva_version = $verRemota;
+
+        // Verificar si el archivo existe y es escribible
+        if (is_writable($archivo)) {
+            // Si el archivo existe, lo leemos y agregamos la nueva versión
+            if (file_exists($archivo)) {
+                $contenido_actual = file_get_contents($archivo);
+                echo " versiòn local:";echo $contenido_actual;
+                if ($nueva_version>$contenido_actual){$nuevo_contenido = $nueva_version;$grabar=true;}else{$grabar=false;}
+                //$nuevo_contenido = $contenido_actual . "\n" . $nueva_version;
+            } else { // Si el archivo no existe, creamos uno nuevo
+                $nuevo_contenido = $nueva_version;
+            }
+
+            // Escribimos el nuevo contenido en el archivo
+            if($grabar){
+                         //coma de gis para actualiza repositoeio.
+                         $correr=shell_exec("git pull");
+                         echo "\n ejecuta actualiacion: \n $correr \n";
+                         // Actualiar el archivo a la nueva version
+                         file_put_contents($archivo, $nuevo_contenido);
+                         echo "\n El archivo $archivo ha sido actualizado con éxito.";
+                        }
+            else{
+                echo "\n El archivo $archivo esta actualizado no necasita se actualizado.";
+               }
+        } else {
+            echo "\n No se puede escribir en el archivo $archivo. Verifica los permisos.";
+        }
     }
 }
