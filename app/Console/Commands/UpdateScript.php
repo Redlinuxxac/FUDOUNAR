@@ -51,8 +51,9 @@ class UpdateScript extends Command
             // Escribimos el nuevo contenido en el archivo
             if($grabar){
                          //coma de gis para actualiza repositoeio.
-                         $correr=shell_exec("git pull");
-                         echo "\n ejecuta actualiacion: \n $correr \n";
+                         $correr1=shell_exec("git fetch origin");
+                         $correr2=shell_exec("git merge origin/master");
+                         echo "\n ejecuta actualiacion: \n $correr1 $correr2 \n";
                          // Actualiar el archivo a la nueva version
                          file_put_contents($archivo, $nuevo_contenido);
                          echo "\n El archivo $archivo ha sido actualizado con éxito.";
