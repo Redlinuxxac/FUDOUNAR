@@ -44,7 +44,9 @@ class UpdateScript extends Command
                 echo " versiòn local:";echo $contenido_actual;
                 if ($nueva_version>$contenido_actual){$nuevo_contenido = $nueva_version;$grabar=true;}else{$grabar=false;}
                 //$nuevo_contenido = $contenido_actual . "\n" . $nueva_version;
-            } else { // Si el archivo no existe, creamos uno nuevo
+            } else { 
+                // Si el archivo no existe, creamos uno nuevo
+                file_put_contents($archivo, "");
                 $nuevo_contenido = $nueva_version;
             }
 
@@ -54,6 +56,7 @@ class UpdateScript extends Command
                          $correr1=shell_exec("git fetch origin");
                          $correr2=shell_exec("git merge origin/master");
                          echo "\n ejecuta actualiacion: \n $correr1 $correr2 \n";
+                         file_put_contents("bitagora.red", "date() \n $correr2");
                          // Actualiar el archivo a la nueva version
                          file_put_contents($archivo, $nuevo_contenido);
                          echo "\n El archivo $archivo ha sido actualizado con éxito.";
