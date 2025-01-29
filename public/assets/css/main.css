@@ -80,7 +80,14 @@ footer {
 
 .row .noti img {
   float: left; /* Hace que la imagen flote a la derecha */
+  width: 30%;
+  height: auto;
   margin: 10px; /* Añade un margen alrededor de la imagen */
+}
+.row .noti .parrofo {
+  float: left; /* Hace que la imagen flote a la derecha */
+  width: 70%;
+  height: auto;
 }
 
 .row .noti p {

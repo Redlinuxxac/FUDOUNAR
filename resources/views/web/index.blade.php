@@ -6,13 +6,26 @@
     @include('menu', ['lugar' => 'Inicio'])
 @endsection
 @section('content')
-<div class="row">
-    <div class="noti">
-        <h1>Bienvenido a FUDOUNAR</h1>
-        <img src="https://picsum.photos/200/300" alt="Imagen de ejemplo">
-        <p>Este es un texto de ejemplo para rellenar el contenido de la página. Aquí puedes colocar información sobre tu organización, sus objetivos y actividades.</p>                
+<h2>Proximas Actividades</h2>
+@foreach ($preview_posts as $post)    
+    <div class="row">
+        <div class="noti">
+            <h1>{{ $post->title }}</h1>
+                <img src="img/{{ $post->imagen }}" alt="Imagen de ejemplo">
+                <p>{!! substr($post->body,0,1000) !!}...</p>
+        </div>
     </div>
-</div>
+@endforeach
+<h2>Actividades Realizadas</h2>
+@foreach ($posts as $post)    
+    <div class="row">
+        <div class="noti">
+            <h1>{{ $post->title }}</h1>
+                <img src="img/{{ $post->imagen }}" alt="Imagen de ejemplo">
+                <p>{!! substr($post->body,0,1000) !!}...</p>
+        </div>
+    </div>
+@endforeach
 @endsection
 @section('footer')
 <footer>

@@ -2,9 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
+use App\Models\Post;
 
 Route::get('/', function () {
-    return view('web.index');
+    $preview_posts = Post::where('status', 'like','preview')->get();
+    $posts = Post::where('status', 'like','published')->get();
+    return view('web.index', compact('preview_posts','posts'));
 })->name('home');
 
 Route::get('/Actividad', function () {
