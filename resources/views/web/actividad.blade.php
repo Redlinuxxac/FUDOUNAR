@@ -6,7 +6,7 @@
     @include('menu', ['lugar' => 'Inicio'])
 @endsection
 @section('content')
-proxima activadad
+<h2>Proxima Activadad</h2>
 <div class="row">
     <div class="noti">
         <h1>Bienvenido a FUDOUNAR</h1>
@@ -14,6 +14,7 @@ proxima activadad
         <p>Este es un texto de ejemplo para rellenar el contenido de la página. Aquí puedes colocar información sobre tu organización, sus objetivos y actividades.</p>                
     </div>
 </div>
+<h2>Activadad Realizada</h2>
 @endsection
 @section('footer')
 <footer>

@@ -7,14 +7,6 @@
 @endsection
 @section('content')
 <h1>Ubicación</h1><br>
-<!-- <iframe
-      width="600"
-      height="400"
-      id="gmap_iframe"
-      src="https://www.google.com/maps/embed?pb=!1m18&q=YOUR_LOCATION_NAME+&zoom=15&output=embed"
-      frameborder="0"
-      allowfullscreen
-    ></iframe> -->
 <iframe 
       width="600"
       height="450"

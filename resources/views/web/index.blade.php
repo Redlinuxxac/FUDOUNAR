@@ -35,7 +35,6 @@
 @section('script')
 <script src="{{ asset('assets/js/script.js') }}"></script>
 <script>
-    // Replace 'YOUR_LOCATION_NAME' with the actual location you want to display on the map
-    //document.getElementById("gmap_iframe").src = "https://www.google.com/maps/embed?pb=!1m18&q=" + encodeURIComponent('YOUR_LOCATION_NAME') + "&zoom=15&output=embed";
+    // Replace 'script nuestro' with the actual location you want to display on the map
   </script>
 @endsection 
