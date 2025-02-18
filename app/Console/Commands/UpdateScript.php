@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class UpdateScript extends Command
 {
@@ -32,6 +33,21 @@ class UpdateScript extends Command
 
         // Nombre del archivo
         $archivo = "version.red";
+        $bitacora = "bitagora.red"; // Nombre del archivo de bitácora
+
+        // Verifica si el archivo existe
+        if (!File::exists($bitacora)) {
+            // Crea el archivo si no existe
+            File::put($bitacora, '');
+        }
+
+        // Obtiene la fecha y hora actual
+        $fechaHora = now()->toDateTimeString();
+
+        // Agrega la fecha y hora al archivo
+        File::append($bitacora, "Comando ejecutado el: {$fechaHora}\n");
+
+        $this->info('Ejecución registrada en la bitácora.');
 
         // Nueva versión a escribir (ajusta según sea necesario)
         $nueva_version = $verRemota;
@@ -47,6 +63,9 @@ class UpdateScript extends Command
             } else { 
                 // Si el archivo no existe, creamos uno nuevo
                 file_put_contents($archivo, "");
+                $nuevo_contenido = $nueva_version; 
+                // Si el archivo no existe, creamos uno nuevo
+                file_put_contents($bitacora, "");
                 $nuevo_contenido = $nueva_version;
             }
 
@@ -60,6 +79,8 @@ class UpdateScript extends Command
                          // Actualiar el archivo a la nueva version
                          file_put_contents($archivo, $nuevo_contenido);
                          echo "\n El archivo $archivo ha sido actualizado con éxito.";
+                         // Agrega la fecha y hora al archivo
+                         File::append($bitacora, "Comando ejecutado el: {$fechaHora} y se actlualizo a la la version: {$nuevo_contenido}\n");
                         }
             else{
                 echo "\n El archivo $archivo esta actualizado no necasita se actualizado.";

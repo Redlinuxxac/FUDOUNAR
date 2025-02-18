@@ -11,7 +11,9 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/Actividad', function () {
-    return view('web.actividad');
+    $preview_posts = Post::where('status', 'like','preview')->get();
+    $posts = Post::where('status', 'like','published')->get();
+    return view('web.actividad', compact('preview_posts','posts'));
 })->name('Actividad');
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');

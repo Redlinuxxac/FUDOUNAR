@@ -56,7 +56,7 @@
 @endsection
 @section('footer')
 <footer>
-    <p>&copy; FUDOUNAR 2023</p>
+    <p>&copy; FUDOUNAR 2023 Creating by REDDATASRD</p>
 </footer>
 @endsection
 @section('script')

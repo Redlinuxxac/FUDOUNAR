@@ -16,9 +16,6 @@
             <a href="{{ route('Actividad') }}" class="nav-link {{ Request::is('Actividad') ? 'active' : '' }}">Actividades</a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('Actividad') }}" class="nav-link {{ Request::is('Actividad') ? 'active' : '' }}">Actividades</a>
-          </li>
-          <li class="nav-item">
             <a href="{{ route('contact.create') }}" class="nav-link {{ Request::is('contact') ? 'active' : '' }}">Contacto</a>
           </li>
         </ul>
