@@ -75,12 +75,12 @@ class UpdateScript extends Command
                          $correr1=shell_exec("git fetch origin");
                          $correr2=shell_exec("git merge origin/master");
                          echo "\n ejecuta actualiacion: \n $correr1 $correr2 \n";
-                         file_put_contents("bitagora.red", date("d/m/Y HH:m:s")." \n $correr2");
+                         //file_put_contents("bitagora.red", date("d/m/Y HH:m:s")." \n $correr2");
                          // Actualiar el archivo a la nueva version
                          file_put_contents($archivo, $nuevo_contenido);
                          echo "\n El archivo $archivo ha sido actualizado con éxito.";
                          // Agrega la fecha y hora al archivo
-                         File::append($bitacora, "Comando ejecutado el: {$fechaHora} y se actlualizo a la la version: {$nuevo_contenido}\n");
+                         File::append($bitacora, "Comando ejecutado el: {$fechaHora} y se actlualizo a la la version: {$nuevo_contenido} \n Esto fuero los Cambios:\n$correr2\n");
                         }
             else{
                 echo "\n El archivo $archivo esta actualizado no necasita se actualizado.";
