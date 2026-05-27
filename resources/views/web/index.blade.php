@@ -46,28 +46,33 @@ class="relative w-full h-[300px] md:h-[500px] overflow-hidden bg-black">
 @section('content')
 <div class="space-y-12 max-w-7xl mx-auto px-4">
     <!-- Seccion Proximas Actividad -->
+    @php
+        $latestActivity = \App\Models\Activity::active()->latest()->first();
+    @endphp
+    @if($latestActivity)
     <div>
-        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 uppercase tracking-wide">Proximas Actividad</h2>
+        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 uppercase tracking-wide">Última Actividad</h2>
         <div class="flex flex-col md:flex-row border-2 border-gray-100 rounded-2xl shadow-sm overflow-hidden h-auto md:h-[250px] group hover:border-red-300 transition-all bg-white">
             <div class="md:w-1/3 overflow-hidden bg-gray-50 flex items-center justify-center">
-                <img src="https://fudounar.org/img/post/01JJQCDM91RVB2D7VMY2E66H47.png" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" alt="Actividad Destacada">
+                <img src="{{ $latestActivity->image }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" alt="{{ $latestActivity->title }}">
             </div>
             <div class="p-8 flex flex-col justify-between flex-grow">
                 <div>
                     <div class="flex items-center text-xs font-bold text-red-600 uppercase mb-2">
-                        <span class="bg-red-100 px-2 py-1 rounded mr-2">Próximamente</span>
-                        Por: Edwin Rosario
+                        <span class="bg-red-100 px-2 py-1 rounded mr-2">Destacado</span>
+                        Equipo FUDOUNAR
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-900 leading-tight">prueba final de publicación</h3>
-                    <p class="text-gray-600 text-sm mt-2 line-clamp-3">Afiche Comemorativo de natalicio de duarte.</p>
+                    <h3 class="text-2xl font-bold text-gray-900 leading-tight">{{ $latestActivity->title }}</h3>
+                    <p class="text-gray-600 text-sm mt-2 line-clamp-3">{{ $latestActivity->description }}</p>
                 </div>
-                <a href="{{ route('activities.show') }}" class="inline-flex items-center text-red-600 font-bold hover:text-red-800 transition">
+                <a href="{{ route('activities.show', $latestActivity->slug) }}" class="inline-flex items-center text-red-600 font-bold hover:text-red-800 transition">
                     Leer más actividad
                     <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </a>
             </div>
         </div>
     </div>
+    @endif
 
     <!-- Seccion Actividades Realizadas con Paginacion 6x6 -->
     <div x-data="{ page: 1, perPage: 6 }">
@@ -85,7 +90,7 @@ class="relative w-full h-[300px] md:h-[500px] overflow-hidden bg-black">
                     <div class="p-5 flex flex-col flex-grow">
                         <h3 class="font-bold text-gray-900 mb-2 leading-tight">{{ $activity->title }}</h3>
                         <p class="text-gray-600 text-xs mb-4 flex-grow line-clamp-2">{{ $activity->description }}</p>
-                        <a href="{{ route('activities.show') }}" class="text-blue-600 font-bold text-sm mt-auto">Leer más &rarr;</a>
+                        <a href="{{ route('activities.show', $activity->slug) }}" class="text-blue-600 font-bold text-sm mt-auto">Leer más &rarr;</a>
                     </div>
                 </article>
             @empty
@@ -107,36 +112,54 @@ class="relative w-full h-[300px] md:h-[500px] overflow-hidden bg-black">
     </div>
 
     <!-- Seccion Blog -->
+    @php
+        $latestPosts = \App\Models\Post::published()->latest()->take(3)->get();
+    @endphp
+    @if($latestPosts->isNotEmpty())
     <section class="mt-16">
         <h2 class="text-3xl font-bold text-center mb-10 text-gray-800">Últimas Noticias</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @for ($i = 1; $i <= 3; $i++)
+            @foreach ($latestPosts as $post)
             <article class="bg-white rounded-xl shadow-md overflow-hidden group hover:border-blue-300 transition-all flex flex-col h-full border">
-                <div class="h-48 overflow-hidden"><img src="https://image.pollinations.ai/prompt/blog-news-humanitarian-{{$i}}?width=400&height=300&seed=30{{$i}}" class="w-full h-full object-cover group-hover:scale-105 transition-duration-500"></div>
+                <div class="h-48 overflow-hidden bg-gray-100 flex items-center justify-center">
+                    @if($post->image)
+                        <img src="{{ $post->image }}" class="w-full h-full object-cover group-hover:scale-105 transition-duration-500">
+                    @else
+                        <flux:icon name="newspaper" class="w-12 h-12 text-gray-300" />
+                    @endif
+                </div>
                 <div class="p-6 flex flex-col flex-grow">
-                    <h3 class="font-bold text-gray-900 mb-2">Noticia destacada del Blog</h3>
-                    <p class="text-gray-600 text-sm flex-grow line-clamp-2">Nuestras últimas actualizaciones directamente desde el campo de trabajo.</p>
-                    <a href="{{ route('blog.show') }}" class="text-red-600 font-bold mt-4 hover:underline">Leer más &rarr;</a>
+                    <h3 class="font-bold text-gray-900 mb-2 line-clamp-2">{{ $post->title }}</h3>
+                    <p class="text-gray-600 text-sm flex-grow line-clamp-2">{{ strip_tags($post->content) }}</p>
+                    <a href="{{ route('blog.show', $post->slug) }}" class="text-red-600 font-bold mt-4 hover:underline">Leer más &rarr;</a>
                 </div>
             </article>
-            @endfor
+            @endforeach
         </div>
     </section>
+    @endif
 
     <!-- Seccion Cursos -->
+    @php
+        $latestCourses = \App\Models\Course::open()->latest()->take(3)->get();
+    @endphp
+    @if($latestCourses->isNotEmpty())
     <section class="mt-16 bg-blue-50 -mx-4 px-4 py-16 rounded-[3rem]">
         <h2 class="text-3xl font-bold text-center mb-10 text-blue-900">Cursos Destacados</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @for ($i = 1; $i <= 3; $i++)
+            @foreach ($latestCourses as $course)
             <article class="bg-white rounded-3xl shadow-xl overflow-hidden group hover:ring-2 hover:ring-blue-300 transition-all flex flex-col h-full">
-                <div class="h-40 overflow-hidden"><img src="https://image.pollinations.ai/prompt/education-course-training-{{$i}}?width=400&height=300&seed=40{{$i}}" class="w-full h-full object-cover group-hover:scale-105 transition-duration-500"></div>
+                <div class="h-40 overflow-hidden bg-gray-100">
+                    <img src="{{ $course->image }}" class="w-full h-full object-cover group-hover:scale-105 transition-duration-500">
+                </div>
                 <div class="p-6 flex flex-col flex-grow">
-                    <h3 class="font-bold text-gray-900 mb-2">Programa Educativo #{{$i}}</h3>
-                    <a href="{{ route('courses.show') }}" class="bg-blue-600 text-white text-center py-2 rounded-xl font-bold hover:bg-blue-700 transition mt-auto">Ver Curso</a>
+                    <h3 class="font-bold text-gray-900 mb-2 line-clamp-2">{{ $course->title }}</h3>
+                    <a href="{{ route('courses.show', $course->slug) }}" class="bg-blue-600 text-white text-center py-2 rounded-xl font-bold hover:bg-blue-700 transition mt-auto">Ver Curso</a>
                 </div>
             </article>
-            @endfor
+            @endforeach
         </div>
     </section>
+    @endif
 </div>
 @endsection
