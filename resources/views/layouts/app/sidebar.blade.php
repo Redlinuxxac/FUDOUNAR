@@ -26,6 +26,20 @@
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 
+                @can('manage-users')
+                    <flux:sidebar.group heading="Roles y Permisos" class="grid">
+                        <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users*')" wire:navigate>
+                            Usuarios
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="shield-check" :href="route('admin.roles')" :current="request()->routeIs('admin.roles*')" wire:navigate>
+                            Roles
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="key" :href="route('admin.permissions')" :current="request()->routeIs('admin.permissions*')" wire:navigate>
+                            Permisos
+                        </flux:sidebar.item>
+                    </flux:sidebar.group>
+                @endcan
+
                 <flux:sidebar.group heading="Contenido" class="grid">
                     <flux:sidebar.item icon="document-text" :href="route('admin.about.edit')" :current="request()->routeIs('admin.about.edit')" wire:navigate>
                         Quiénes Somos
