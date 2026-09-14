@@ -5,9 +5,15 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * The current password being used by the factory.
+     */
+    protected static ?string $password;
+
     /**
      * Seed the application's database.
      */
@@ -18,11 +24,13 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Edwin Rosario',
             'email' => 'RosarioEdwinAC@gmail.com',
+            'password' => static::$password ??= Hash::make('PPsae5938'),
         ]);
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'admin@fudounar.org',
+            'name' => 'Kendry Rosario',
+            'email' => 'kendry.rosario@fudounar.org',
+            'password' => static::$password ??= Hash::make('Mybebe25'),
         ]);
 
         $this->call(RolesAndPermissionsSeeder::class);

@@ -4,13 +4,13 @@
 
 @section('top_content')
 <div x-data="{ 
-    active: 0, 
-    loop() {
-        setInterval(() => { this.active = (this.active + 1) % 5 }, 5000)
-    }
-}" 
-x-init="loop()"
-class="relative w-full h-[300px] md:h-[500px] overflow-hidden bg-black">
+                    active: 0, 
+                    loop() {
+                                setInterval(() => { this.active = (this.active + 1) % 5 }, 5000)
+                            }
+                }" 
+        x-init="loop()"
+        class="relative w-full h-[300px] md:h-[500px] overflow-hidden bg-black">
     
     <!-- Slides -->
     <div class="relative w-full h-full">

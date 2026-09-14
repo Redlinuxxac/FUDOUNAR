@@ -6,6 +6,8 @@ use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Volt\Volt;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class UserManagementTest extends TestCase
@@ -200,5 +202,73 @@ class UserManagementTest extends TestCase
 
         $response = $this->get(route('admin.permissions'));
         $response->assertStatus(200);
+    }
+
+    public function test_authorized_user_can_create_custom_role()
+    {
+        $adminUser = User::where('email', 'admin@fudounar.org')->first();
+        $this->actingAs($adminUser);
+
+        Volt::test('admin.roles.create')
+            ->set('name', 'moderator')
+            ->set('selectedPermissions', ['manage-blog'])
+            ->call('save')
+            ->assertRedirect(route('admin.roles'));
+
+        $role = Role::findByName('moderator');
+        $this->assertNotNull($role);
+        $this->assertTrue($role->hasPermissionTo('manage-blog'));
+    }
+
+    public function test_authorized_user_cannot_create_protected_role()
+    {
+        $adminUser = User::where('email', 'admin@fudounar.org')->first();
+        $this->actingAs($adminUser);
+
+        Volt::test('admin.roles.create')
+            ->set('name', 'admin')
+            ->call('save')
+            ->assertStatus(403);
+    }
+
+    public function test_authorized_user_cannot_delete_protected_role()
+    {
+        $adminUser = User::where('email', 'admin@fudounar.org')->first();
+        $this->actingAs($adminUser);
+
+        $role = Role::findByName('admin');
+
+        Volt::test('admin.roles.index')
+            ->call('delete', $role->id)
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas('roles', ['name' => 'admin']);
+    }
+
+    public function test_authorized_user_can_create_custom_permission()
+    {
+        $adminUser = User::where('email', 'admin@fudounar.org')->first();
+        $this->actingAs($adminUser);
+
+        Volt::test('admin.permissions.create')
+            ->set('name', 'publish-banners')
+            ->call('save')
+            ->assertRedirect(route('admin.permissions'));
+
+        $this->assertDatabaseHas('permissions', ['name' => 'publish-banners']);
+    }
+
+    public function test_authorized_user_cannot_delete_protected_permission()
+    {
+        $adminUser = User::where('email', 'admin@fudounar.org')->first();
+        $this->actingAs($adminUser);
+
+        $permission = Permission::findByName('manage-users');
+
+        Volt::test('admin.permissions.index')
+            ->call('delete', $permission->id)
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas('permissions', ['name' => 'manage-users']);
     }
 }

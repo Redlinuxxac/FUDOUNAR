@@ -81,7 +81,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Roles y Permisos
         Volt::route('/roles', 'admin.roles.index')->name('admin.roles');
+        Volt::route('/roles/create', 'admin.roles.create')->name('admin.roles.create');
+        Volt::route('/roles/{role}/edit', 'admin.roles.edit')->name('admin.roles.edit');
+
         Volt::route('/permissions', 'admin.permissions.index')->name('admin.permissions');
+        Volt::route('/permissions/create', 'admin.permissions.create')->name('admin.permissions.create');
+        Volt::route('/permissions/{permission}/edit', 'admin.permissions.edit')->name('admin.permissions.edit');
 
         // Páginas
         Volt::route('/pages/about', 'admin.about.edit')->name('admin.about.edit');
