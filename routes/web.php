@@ -5,10 +5,15 @@ use App\Models\Activity;
 use App\Models\ContactSetting;
 use App\Models\Course;
 use App\Models\Post;
+use App\Models\Slide;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-Route::view('/', 'web.index')->name('home');
+Route::get('/', function () {
+    return view('web.index', [
+        'slides' => Slide::active()->ordered()->get(),
+    ]);
+})->name('home');
 
 Route::get('/ads.txt', function () {
     $adsenseId = ContactSetting::first()?->adsense_id;
@@ -90,6 +95,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Páginas
         Volt::route('/pages/about', 'admin.about.edit')->name('admin.about.edit');
+
+        // Slides
+        Volt::route('/slides', 'admin.slides.index')->name('admin.slides');
+        Volt::route('/slides/create', 'admin.slides.create')->name('admin.slides.create');
+        Volt::route('/slides/{slide}/edit', 'admin.slides.edit')->name('admin.slides.edit');
     });
 });
 

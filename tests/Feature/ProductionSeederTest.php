@@ -56,5 +56,12 @@ class ProductionSeederTest extends TestCase
         $rootUser = User::where('email', 'like', 'rosarioedwinac%')->first();
         $this->assertNotNull($rootUser);
         $this->assertTrue($rootUser->hasRole('root'));
+
+        // Check Slides seeded
+        $this->assertDatabaseCount('slides', 5);
+        $this->assertDatabaseHas('slides', [
+            'title' => 'Uniendo Culturas',
+            'order' => 1,
+        ]);
     }
 }

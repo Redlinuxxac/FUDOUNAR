@@ -14,6 +14,7 @@ class ProductionSeeder extends Seeder
         $this->call([
             AboutPageSeeder::class,
             ContactSettingSeeder::class,
+            SlideSeeder::class,
             UserSeeder::class,
             RolesAndPermissionsSeeder::class,
         ]);

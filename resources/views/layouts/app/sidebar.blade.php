@@ -41,6 +41,9 @@
                 @endcan
 
                 <flux:sidebar.group heading="Contenido" class="grid">
+                    <flux:sidebar.item icon="photo" :href="route('admin.slides')" :current="request()->routeIs('admin.slides*')" wire:navigate>
+                        Slides / Carrusel
+                    </flux:sidebar.item>
                     <flux:sidebar.item icon="document-text" :href="route('admin.about.edit')" :current="request()->routeIs('admin.about.edit')" wire:navigate>
                         Quiénes Somos
                     </flux:sidebar.item>

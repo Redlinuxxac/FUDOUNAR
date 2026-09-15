@@ -3,44 +3,64 @@
 @section('title', 'FUDOUNAR - Inicio')
 
 @section('top_content')
+@php
+    $slides = $slides ?? \App\Models\Slide::active()->ordered()->get();
+    $totalSlides = $slides->count();
+@endphp
+
+@if($totalSlides > 0)
 <div x-data="{ 
-                    active: 0, 
-                    loop() {
-                                setInterval(() => { this.active = (this.active + 1) % 5 }, 5000)
-                            }
-                }" 
+            active: 0, 
+            total: {{ $totalSlides }},
+            loop() {
+                if (this.total > 1) {
+                    setInterval(() => { this.active = (this.active + 1) % this.total }, 5000)
+                }
+            }
+        }" 
         x-init="loop()"
         class="relative w-full h-[300px] md:h-[500px] overflow-hidden bg-black">
     
     <!-- Slides -->
     <div class="relative w-full h-full">
-        <template x-for="(i, index) in [1,2,3,4,5]" :key="index">
-            <div x-show="active === index" 
+        @foreach ($slides as $index => $slide)
+            <div x-show="active === {{ $index }}" 
                  x-transition:enter="transition duration-1000" 
                  x-transition:enter-start="opacity-0" 
                  x-transition:enter-end="opacity-100" 
                  class="absolute inset-0" x-cloak>
-                <img :src="'{{ asset('slider/slide') }}' + i + '.jpg'" class="w-full h-full object-cover opacity-60">
+                <img src="{{ $slide->image_url }}" class="w-full h-full object-cover opacity-60" alt="{{ $slide->title }}">
                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-6">
-                    <h2 class="text-2xl md:text-4xl lg:text-6xl font-bold mb-2 md:mb-4" x-text="['Uniendo Culturas', 'Educación para Todos', 'Voluntariado con Corazón', 'Salud Infantil', 'Capacitación Continua'][index]"></h2>
-                    <p class="text-sm md:text-xl lg:text-2xl max-w-2xl px-4" x-text="['República Dominicana y Aruba trabajando juntas.', 'Programas de alfabetización digital transforman vidas.', 'Sé parte del cambio. Únete hoy mismo.', 'Jornadas médicas para los más pequeños.', 'Cursos técnicos para el crecimiento profesional.'][index]"></p>
-                    <div class="mt-4 md:mt-8 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-                        <a href="{{ route('about') }}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 md:py-3 px-6 md:px-8 rounded-full transition text-sm md:text-base">Saber más</a>
-                        <a href="{{ route('contact') }}" class="bg-white hover:bg-gray-100 text-gray-900 font-bold py-2 md:py-3 px-6 md:px-8 rounded-full transition text-sm md:text-base">Contáctanos</a>
-                    </div>
+                    <h2 class="text-2xl md:text-4xl lg:text-6xl font-bold mb-2 md:mb-4">{{ $slide->title }}</h2>
+                    @if($slide->subtitle)
+                        <p class="text-sm md:text-xl lg:text-2xl max-w-2xl px-4">{{ $slide->subtitle }}</p>
+                    @endif
+                    @if(($slide->button_text && $slide->button_link) || ($slide->button_secondary_text && $slide->button_secondary_link))
+                        <div class="mt-4 md:mt-8 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                            @if($slide->button_text && $slide->button_link)
+                                <a href="{{ $slide->button_link }}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 md:py-3 px-6 md:px-8 rounded-full transition text-sm md:text-base">{{ $slide->button_text }}</a>
+                            @endif
+                            @if($slide->button_secondary_text && $slide->button_secondary_link)
+                                <a href="{{ $slide->button_secondary_link }}" class="bg-white hover:bg-gray-100 text-gray-900 font-bold py-2 md:py-3 px-6 md:px-8 rounded-full transition text-sm md:text-base">{{ $slide->button_secondary_text }}</a>
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </div>
-        </template>
+        @endforeach
     </div>
 
+    @if($totalSlides > 1)
     <!-- Nav Buttons -->
-    <button @click="active = (active - 1 + 5) % 5" class="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-50 bg-white/20 hover:bg-white/40 text-white p-2 md:p-3 rounded-full backdrop-blur-sm transition">
+    <button @click="active = (active - 1 + total) % total" class="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-50 bg-white/20 hover:bg-white/40 text-white p-2 md:p-3 rounded-full backdrop-blur-sm transition cursor-pointer">
         <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
     </button>
-    <button @click="active = (active + 1) % 5" class="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-50 bg-white/20 hover:bg-white/40 text-white p-2 md:p-3 rounded-full backdrop-blur-sm transition">
+    <button @click="active = (active + 1) % total" class="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-50 bg-white/20 hover:bg-white/40 text-white p-2 md:p-3 rounded-full backdrop-blur-sm transition cursor-pointer">
         <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
     </button>
+    @endif
 </div>
+@endif
 @endsection
 
 @section('content')
