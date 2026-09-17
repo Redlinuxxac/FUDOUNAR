@@ -11,6 +11,13 @@ new #[Title('Contact Settings')] class extends Component {
     public string $address = '';
     public string $google_maps_url = '';
     public string $adsense_id = '';
+    public string $facebook_url = '';
+    public string $instagram_url = '';
+    public string $twitter_url = '';
+    public string $youtube_url = '';
+    public string $tiktok_url = '';
+    public string $whatsapp_url = '';
+    public string $linkedin_url = '';
 
     /**
      * Mount the component.
@@ -24,6 +31,13 @@ new #[Title('Contact Settings')] class extends Component {
         $this->address = $settings->address ?? '';
         $this->google_maps_url = $settings->google_maps_url ?? '';
         $this->adsense_id = $settings->adsense_id ?? '';
+        $this->facebook_url = $settings->facebook_url ?? '';
+        $this->instagram_url = $settings->instagram_url ?? '';
+        $this->twitter_url = $settings->twitter_url ?? '';
+        $this->youtube_url = $settings->youtube_url ?? '';
+        $this->tiktok_url = $settings->tiktok_url ?? '';
+        $this->whatsapp_url = $settings->whatsapp_url ?? '';
+        $this->linkedin_url = $settings->linkedin_url ?? '';
     }
 
     /**
@@ -37,6 +51,13 @@ new #[Title('Contact Settings')] class extends Component {
             'address' => 'required|string',
             'google_maps_url' => 'nullable|url',
             'adsense_id' => 'nullable|string|regex:/^pub-\d+$/',
+            'facebook_url' => 'nullable|url',
+            'instagram_url' => 'nullable|url',
+            'twitter_url' => 'nullable|url',
+            'youtube_url' => 'nullable|url',
+            'tiktok_url' => 'nullable|url',
+            'whatsapp_url' => 'nullable|string',
+            'linkedin_url' => 'nullable|url',
         ]);
 
         $settings = ContactSetting::first() ?? new ContactSetting();
@@ -111,6 +132,25 @@ new #[Title('Contact Settings')] class extends Component {
                     </flux:text>
                 @endif
             @endif
+
+            <flux:separator variant="subtle" />
+
+            <div class="space-y-4">
+                <div>
+                    <flux:heading size="lg">{{ __('Social Media') }}</flux:heading>
+                    <flux:subheading>{{ __('Official social media profiles and messaging channels for the foundation.') }}</flux:subheading>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <flux:input wire:model="facebook_url" :label="__('Facebook')" type="url" placeholder="https://facebook.com/fudounar" />
+                    <flux:input wire:model="instagram_url" :label="__('Instagram')" type="url" placeholder="https://instagram.com/fudounar" />
+                    <flux:input wire:model="twitter_url" :label="__('X (Twitter)')" type="url" placeholder="https://x.com/fudounar" />
+                    <flux:input wire:model="youtube_url" :label="__('YouTube')" type="url" placeholder="https://youtube.com/@fudounar" />
+                    <flux:input wire:model="tiktok_url" :label="__('TikTok')" type="url" placeholder="https://tiktok.com/@fudounar" />
+                    <flux:input wire:model="whatsapp_url" :label="__('WhatsApp (Phone or Link)')" type="text" placeholder="+1 809 000 0000 o https://wa.me/..." />
+                    <flux:input wire:model="linkedin_url" :label="__('LinkedIn')" type="url" placeholder="https://linkedin.com/company/fudounar" class="md:col-span-2" />
+                </div>
+            </div>
 
             <div class="flex items-center gap-4">
                 <flux:button variant="primary" type="submit" class="w-full">

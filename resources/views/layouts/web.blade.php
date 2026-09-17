@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'FUDOUNAR - Inicio')</title>
 
+    <link rel="icon" type="image/png" href="{{ asset('img/LogoMejorado.png') }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+
     @php
         $contactSettings = \App\Models\ContactSetting::first();
         $adsenseId = $contactSettings?->adsense_id;

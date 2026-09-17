@@ -1,9 +1,9 @@
 <header id="header" class="bg-[#f0f0f0] border-b border-gray-300" x-data="{ mobileMenuOpen: false }">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
         <!-- Logo -->
         <div class="flex-shrink-0">
-            <a href="{{ route('home') }}">
-                <img src="{{ asset('img/logo.jpg') }}" alt="Logo Fudounar" class="w-[200px] md:w-[350px] h-auto transition-all">
+            <a href="{{ route('home') }}" class="flex items-center">
+                <img src="{{ asset('img/LogoMejorado.png') }}" alt="Logo Fudounar" class="h-24 sm:h-32 md:h-44 lg:h-48 w-auto object-contain mix-blend-multiply transition-all" style="height: clamp(100px, 15vw, 190px); max-height: 200px; width: auto;">
             </a>
         </div>
         
