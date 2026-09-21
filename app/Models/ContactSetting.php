@@ -9,11 +9,29 @@ class ContactSetting extends Model
     protected $guarded = [];
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_facebook_active' => 'boolean',
+            'is_instagram_active' => 'boolean',
+            'is_twitter_active' => 'boolean',
+            'is_youtube_active' => 'boolean',
+            'is_tiktok_active' => 'boolean',
+            'is_whatsapp_active' => 'boolean',
+            'is_linkedin_active' => 'boolean',
+        ];
+    }
+
+    /**
      * Get the formatted WhatsApp link.
      */
     public function getWhatsappLinkAttribute(): ?string
     {
-        if (blank($this->whatsapp_url)) {
+        if (blank($this->whatsapp_url) || ! ($this->is_whatsapp_active ?? true)) {
             return null;
         }
 
@@ -27,16 +45,72 @@ class ContactSetting extends Model
     }
 
     /**
-     * Determine if any social media link is set.
+     * Determine if Facebook is active and configured.
+     */
+    public function isFacebookVisible(): bool
+    {
+        return (bool) ($this->is_facebook_active ?? true) && ! empty($this->facebook_url);
+    }
+
+    /**
+     * Determine if Instagram is active and configured.
+     */
+    public function isInstagramVisible(): bool
+    {
+        return (bool) ($this->is_instagram_active ?? true) && ! empty($this->instagram_url);
+    }
+
+    /**
+     * Determine if Twitter/X is active and configured.
+     */
+    public function isTwitterVisible(): bool
+    {
+        return (bool) ($this->is_twitter_active ?? true) && ! empty($this->twitter_url);
+    }
+
+    /**
+     * Determine if YouTube is active and configured.
+     */
+    public function isYoutubeVisible(): bool
+    {
+        return (bool) ($this->is_youtube_active ?? true) && ! empty($this->youtube_url);
+    }
+
+    /**
+     * Determine if TikTok is active and configured.
+     */
+    public function isTiktokVisible(): bool
+    {
+        return (bool) ($this->is_tiktok_active ?? true) && ! empty($this->tiktok_url);
+    }
+
+    /**
+     * Determine if WhatsApp is active and configured.
+     */
+    public function isWhatsappVisible(): bool
+    {
+        return (bool) ($this->is_whatsapp_active ?? true) && ! empty($this->whatsapp_url);
+    }
+
+    /**
+     * Determine if LinkedIn is active and configured.
+     */
+    public function isLinkedinVisible(): bool
+    {
+        return (bool) ($this->is_linkedin_active ?? true) && ! empty($this->linkedin_url);
+    }
+
+    /**
+     * Determine if any social media link is set and active.
      */
     public function hasSocialLinks(): bool
     {
-        return ! empty($this->facebook_url)
-            || ! empty($this->instagram_url)
-            || ! empty($this->twitter_url)
-            || ! empty($this->youtube_url)
-            || ! empty($this->tiktok_url)
-            || ! empty($this->whatsapp_url)
-            || ! empty($this->linkedin_url);
+        return $this->isFacebookVisible()
+            || $this->isInstagramVisible()
+            || $this->isTwitterVisible()
+            || $this->isYoutubeVisible()
+            || $this->isTiktokVisible()
+            || $this->isWhatsappVisible()
+            || $this->isLinkedinVisible();
     }
 }

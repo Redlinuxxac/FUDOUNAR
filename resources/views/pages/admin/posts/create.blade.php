@@ -127,17 +127,28 @@ new #[Layout('layouts.app')] class extends Component {
                     <label class="block text-sm font-medium text-gray-700 dark:text-zinc-300">Contenido del Artículo</label>
                     
                     <div
-                        x-data="{ content: @entangle('content') }"
-                        x-init="
-                            $watch('content', value => {
-                                if (value !== $refs.trix.value) {
-                                    $refs.trix.editor.loadHTML(value);
+                        x-data="{
+                            content: @entangle('content'),
+                            init() {
+                                this.setEditorContent();
+                                this.$watch('content', value => {
+                                    if (this.$refs.trix && this.$refs.trix.editor && value !== this.$refs.trix.value) {
+                                        this.$refs.trix.editor.loadHTML(value || '');
+                                    }
+                                });
+                            },
+                            setEditorContent() {
+                                if (this.$refs.trix && this.$refs.trix.editor && this.content) {
+                                    if (!this.$refs.trix.value || this.$refs.trix.value.trim() === '') {
+                                        this.$refs.trix.editor.loadHTML(this.content);
+                                    }
                                 }
-                            })
-                        "
+                            }
+                        }"
+                        x-on:trix-initialize="setEditorContent()"
                         wire:ignore
                     >
-                        <input id="content" type="hidden" x-model="content">
+                        <input id="content" type="hidden" value="{{ $content }}">
                         <trix-editor 
                             x-ref="trix"
                             input="content" 

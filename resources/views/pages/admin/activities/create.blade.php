@@ -126,17 +126,28 @@ new #[Layout('layouts.app')] class extends Component {
                     <label class="block text-sm font-medium text-gray-700 dark:text-zinc-300">Descripción Detallada</label>
                     
                     <div
-                        x-data="{ description: @entangle('description') }"
-                        x-init="
-                            $watch('description', value => {
-                                if (value !== $refs.trix.value) {
-                                    $refs.trix.editor.loadHTML(value);
+                        x-data="{
+                            description: @entangle('description'),
+                            init() {
+                                this.setEditorContent();
+                                this.$watch('description', value => {
+                                    if (this.$refs.trix && this.$refs.trix.editor && value !== this.$refs.trix.value) {
+                                        this.$refs.trix.editor.loadHTML(value || '');
+                                    }
+                                });
+                            },
+                            setEditorContent() {
+                                if (this.$refs.trix && this.$refs.trix.editor && this.description) {
+                                    if (!this.$refs.trix.value || this.$refs.trix.value.trim() === '') {
+                                        this.$refs.trix.editor.loadHTML(this.description);
+                                    }
                                 }
-                            })
-                        "
+                            }
+                        }"
+                        x-on:trix-initialize="setEditorContent()"
                         wire:ignore
                     >
-                        <input id="description" type="hidden" x-model="description">
+                        <input id="description" type="hidden" value="{{ $description }}">
                         <trix-editor 
                             x-ref="trix"
                             input="description" 

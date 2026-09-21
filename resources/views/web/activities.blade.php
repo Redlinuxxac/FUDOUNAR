@@ -22,7 +22,7 @@
                 <div class="p-5 flex flex-col flex-grow">
                     <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2">Publicado: {{ $activity->created_at->diffForHumans() }}</span>
                     <h3 class="text-xl font-bold mb-3 text-gray-900 leading-tight">{{ $activity->title }}</h3>
-                    <p class="text-gray-600 text-sm mb-6 flex-grow line-clamp-3">{{ $activity->description }}</p>
+                    <p class="text-gray-600 text-sm mb-6 flex-grow line-clamp-3">{!! $activity->description !!}</p>
                     <a href="{{ route('activities.show', $activity->slug) }}" class="text-blue-600 font-bold flex items-center mt-auto">
                         Leer más
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>

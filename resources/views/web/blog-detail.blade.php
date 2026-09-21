@@ -50,11 +50,11 @@
         {!! $post->content !!}
     </article>
 
-    <footer class="pt-8 border-t border-gray-100 flex justify-between items-center">
-        <div class="flex space-x-4">
-            <a href="#" class="text-gray-400 hover:text-blue-600 transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 3.656 10.995 9 11.83v-8.369h-3.037v-3.461h3.037v-2.639c0-3.006 1.791-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.246h3.328l-.532 3.461h-2.796v8.369c5.344-.835 9-5.84 9-11.83z"/></svg></a>
-        </div>
-        <a href="{{ route('blog') }}" class="text-red-600 font-bold hover:underline">Volver al Blog</a>
+    <footer class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <x-share-buttons :title="$post->title" :url="route('blog.show', $post->slug)" />
+        <a href="{{ route('blog') }}" class="bg-gray-100 hover:bg-gray-200 text-red-600 font-bold py-2 px-6 rounded-lg transition flex items-center shrink-0">
+            &larr; Volver al Blog
+        </a>
     </footer>
 </div>
 @endsection

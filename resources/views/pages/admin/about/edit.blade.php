@@ -233,17 +233,28 @@ new #[Layout('layouts.app')] class extends Component {
                     <div class="space-y-2">
                         <flux:label>Áreas de Impacto (Lista HTML)</flux:label>
                         <div
-                            x-data="{ impact: @entangle('impact_text') }"
-                            x-init="
-                                $watch('impact', value => {
-                                    if (value !== $refs.trixImpact.value) {
-                                        $refs.trixImpact.editor.loadHTML(value);
+                            x-data="{
+                                impact: @entangle('impact_text'),
+                                init() {
+                                    this.setEditorContent();
+                                    this.$watch('impact', value => {
+                                        if (this.$refs.trixImpact && this.$refs.trixImpact.editor && value !== this.$refs.trixImpact.value) {
+                                            this.$refs.trixImpact.editor.loadHTML(value || '');
+                                        }
+                                    });
+                                },
+                                setEditorContent() {
+                                    if (this.$refs.trixImpact && this.$refs.trixImpact.editor && this.impact) {
+                                        if (!this.$refs.trixImpact.value || this.$refs.trixImpact.value.trim() === '') {
+                                            this.$refs.trixImpact.editor.loadHTML(this.impact);
+                                        }
                                     }
-                                })
-                            "
+                                }
+                            }"
+                            x-on:trix-initialize="setEditorContent()"
                             wire:ignore
                         >
-                            <input id="impact_text" type="hidden" x-model="impact">
+                            <input id="impact_text" type="hidden" value="{{ $impact_text }}">
                             <trix-editor 
                                 x-ref="trixImpact"
                                 input="impact_text" 
@@ -256,17 +267,28 @@ new #[Layout('layouts.app')] class extends Component {
                     <div class="space-y-2">
                         <flux:label>Nuestros Logros (Lista HTML)</flux:label>
                         <div
-                            x-data="{ achievements: @entangle('achievements_text') }"
-                            x-init="
-                                $watch('achievements', value => {
-                                    if (value !== $refs.trixAchievements.value) {
-                                        $refs.trixAchievements.editor.loadHTML(value);
+                            x-data="{
+                                achievements: @entangle('achievements_text'),
+                                init() {
+                                    this.setEditorContent();
+                                    this.$watch('achievements', value => {
+                                        if (this.$refs.trixAchievements && this.$refs.trixAchievements.editor && value !== this.$refs.trixAchievements.value) {
+                                            this.$refs.trixAchievements.editor.loadHTML(value || '');
+                                        }
+                                    });
+                                },
+                                setEditorContent() {
+                                    if (this.$refs.trixAchievements && this.$refs.trixAchievements.editor && this.achievements) {
+                                        if (!this.$refs.trixAchievements.value || this.$refs.trixAchievements.value.trim() === '') {
+                                            this.$refs.trixAchievements.editor.loadHTML(this.achievements);
+                                        }
                                     }
-                                })
-                            "
+                                }
+                            }"
+                            x-on:trix-initialize="setEditorContent()"
                             wire:ignore
                         >
-                            <input id="achievements_text" type="hidden" x-model="achievements">
+                            <input id="achievements_text" type="hidden" value="{{ $achievements_text }}">
                             <trix-editor 
                                 x-ref="trixAchievements"
                                 input="achievements_text" 

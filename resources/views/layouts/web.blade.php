@@ -38,7 +38,7 @@
 
     @yield('top_content')
 
-    <main class="flex-grow w-full max-w-[800px] mx-auto p-5">
+    <main class="flex-grow w-full max-w-[900px] mx-auto p-5">
         @yield('content')
     </main>
 

@@ -49,17 +49,13 @@
     <article class="prose prose-lg max-w-none text-gray-700 leading-relaxed text-justify">
         <p class="text-xl font-medium text-blue-800 mb-6 italic">"Un compromiso firme con el desarrollo y bienestar de nuestras comunidades."</p>
         
-        {!! nl2br(e($activity->description)) !!}
+        {!! $activity->description !!}
     </article>
 
-    <!-- Footer de la Noticia -->
-    <footer class="pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-        <div class="flex space-x-4">
-            <span class="font-bold text-gray-900">Compartir:</span>
-            <a href="#" class="text-blue-600 hover:text-blue-800 font-bold">Facebook</a>
-            <a href="#" class="text-red-600 hover:text-red-800 font-bold">WhatsApp</a>
-        </div>
-        <a href="{{ route('activities') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg transition flex items-center">
+    <!-- Footer de la Actividad -->
+    <footer class="pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+        <x-share-buttons :title="$activity->title" :url="route('activities.show', $activity->slug)" />
+        <a href="{{ route('activities') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg transition flex items-center shrink-0">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Volver al catálogo
         </a>

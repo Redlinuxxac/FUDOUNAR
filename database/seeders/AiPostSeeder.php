@@ -12,14 +12,15 @@ class AiPostSeeder extends Seeder
     public function run(): void
     {
         $apiKey = env('LARAVEL_GEMINI_API_KEY');
-        
-        if (!$apiKey) {
+
+        if (! $apiKey) {
             echo "Error: No LARAVEL_GEMINI_API_KEY found in .env\n";
+
             return;
         }
 
         $client = Gemini::client($apiKey);
-        
+
         echo "Buscando modelos disponibles...\n";
         try {
             $models = $client->models()->list();
@@ -27,7 +28,7 @@ class AiPostSeeder extends Seeder
                 print_r($model);
             }
         } catch (\Exception $e) {
-            echo "No se pudieron listar los modelos: " . $e->getMessage() . "\n";
+            echo 'No se pudieron listar los modelos: '.$e->getMessage()."\n";
         }
 
         $prompt = "Genera un artículo de blog breve (máximo 500 palabras) sobre actividades humanitarias o desarrollo social. Responde estrictamente en formato JSON con los campos: 'title' y 'content' (HTML básico).";
@@ -47,14 +48,14 @@ class AiPostSeeder extends Seeder
                         'content' => $data['content'],
                         'status' => PostStatus::PUBLISHED,
                         'published_at' => now(),
-                        'image' => 'https://image.pollinations.ai/prompt/humanitarian-news-blog?width=800&height=600&seed=' . rand(1, 9999),
+                        'image' => 'https://image.pollinations.ai/prompt/humanitarian-news-blog?width=800&height=600&seed='.rand(1, 9999),
                     ]);
-                    echo "Éxito: " . $data['title'] . "\n";
+                    echo 'Éxito: '.$data['title']."\n";
                 } else {
                     echo "Fallo: Respuesta no válida.\n";
                 }
             } catch (\Exception $e) {
-                echo "Error: " . $e->getMessage() . "\n";
+                echo 'Error: '.$e->getMessage()."\n";
             }
         }
     }

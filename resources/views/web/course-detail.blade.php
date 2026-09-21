@@ -46,6 +46,14 @@
                     {!! $course->description !!}
                 </div>
             </section>
+
+            <footer class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <x-share-buttons :title="$course->title" :url="route('courses.show', $course->slug)" />
+                <a href="{{ route('courses') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg transition flex items-center shrink-0">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Volver a Cursos
+                </a>
+            </footer>
         </div>
 
         <!-- Columna Derecha: Sidebar de Inscripción -->
@@ -66,6 +74,10 @@
                     </button>
                     
                     <p class="text-[10px] text-center text-gray-400 uppercase tracking-widest font-bold">Inscripciones abiertas</p>
+
+                    <div class="pt-4 border-t border-gray-100">
+                        <x-share-buttons :title="$course->title" :url="route('courses.show', $course->slug)" />
+                    </div>
                 </div>
             </div>
 

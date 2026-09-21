@@ -4,7 +4,7 @@
 <footer class="bg-[#f0f0f0] text-center p-6 mt-12 border-t border-gray-300">
     @if($footerContact && $footerContact->hasSocialLinks())
         <div class="flex justify-center items-center gap-4 mb-3">
-            @if($footerContact->facebook_url)
+            @if($footerContact->isFacebookVisible())
                 <a href="{{ $footerContact->facebook_url }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-[#1877F2] transition" title="Facebook">
                     <span class="sr-only">Facebook</span>
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -12,7 +12,7 @@
                     </svg>
                 </a>
             @endif
-            @if($footerContact->instagram_url)
+            @if($footerContact->isInstagramVisible())
                 <a href="{{ $footerContact->instagram_url }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-[#E4405F] transition" title="Instagram">
                     <span class="sr-only">Instagram</span>
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -20,7 +20,7 @@
                     </svg>
                 </a>
             @endif
-            @if($footerContact->twitter_url)
+            @if($footerContact->isTwitterVisible())
                 <a href="{{ $footerContact->twitter_url }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-black transition" title="X (Twitter)">
                     <span class="sr-only">X</span>
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -28,7 +28,7 @@
                     </svg>
                 </a>
             @endif
-            @if($footerContact->youtube_url)
+            @if($footerContact->isYoutubeVisible())
                 <a href="{{ $footerContact->youtube_url }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-[#FF0000] transition" title="YouTube">
                     <span class="sr-only">YouTube</span>
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -36,7 +36,7 @@
                     </svg>
                 </a>
             @endif
-            @if($footerContact->tiktok_url)
+            @if($footerContact->isTiktokVisible())
                 <a href="{{ $footerContact->tiktok_url }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-black transition" title="TikTok">
                     <span class="sr-only">TikTok</span>
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -44,7 +44,7 @@
                     </svg>
                 </a>
             @endif
-            @if($footerContact->whatsapp_url)
+            @if($footerContact->isWhatsappVisible())
                 <a href="{{ $footerContact->whatsapp_link }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-[#25D366] transition" title="WhatsApp">
                     <span class="sr-only">WhatsApp</span>
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -52,7 +52,7 @@
                     </svg>
                 </a>
             @endif
-            @if($footerContact->linkedin_url)
+            @if($footerContact->isLinkedinVisible())
                 <a href="{{ $footerContact->linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-[#0A66C2] transition" title="LinkedIn">
                     <span class="sr-only">LinkedIn</span>
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
