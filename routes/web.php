@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\CourseRegistrationController;
+use App\Http\Controllers\Web\SitemapController;
 use App\Models\AboutPage;
 use App\Models\Activity;
 use App\Models\ContactSetting;
@@ -16,6 +17,9 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::view('/politica-de-privacidad', 'web.privacy')->name('privacy');
+Route::view('/terminos-y-condiciones', 'web.terms')->name('terms');
 
 Route::get('/ads.txt', function () {
     $adsenseId = ContactSetting::first()?->adsense_id;

@@ -1,6 +1,8 @@
 @extends('layouts.web')
 
-@section('title', 'FUDOUNAR - Inicio')
+@section('title', 'FUDOUNAR - Fundación Dominicana de Urología Dr. Nelson Adames')
+@section('meta_description', 'Fundación Dominicana de Urología Dr. Nelson Adames (FUDOUNAR). Promoviendo la salud urológica, educación médica continua, cursos especializados y apoyo a la comunidad en República Dominicana.')
+@section('canonical_url', route('home'))
 
 @section('top_content')
 @php
@@ -67,28 +69,39 @@
 <div class="space-y-12 max-w-7xl mx-auto px-4">
     <!-- Seccion Proximas Actividad -->
     @php
-        $latestActivity = \App\Models\Activity::active()->latest()->first();
+        $featuredActivity = \App\Models\Activity::where('status', \App\Enums\ActivityStatus::UPCOMING)->latest()->first()
+            ?? \App\Models\Activity::active()->latest()->first();
     @endphp
-    @if($latestActivity)
+    @if($featuredActivity)
     <div>
-        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 uppercase tracking-wide">Última Actividad</h2>
-        <div class="flex flex-col md:flex-row border-2 border-gray-100 rounded-2xl shadow-sm overflow-hidden h-auto md:h-[250px] group hover:border-red-300 transition-all bg-white">
-            <div class="md:w-1/3 overflow-hidden bg-gray-50 flex items-center justify-center">
-                <img src="{{ $latestActivity->image }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" alt="{{ $latestActivity->title }}">
+        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 uppercase tracking-wide">
+            {{ $featuredActivity->status === \App\Enums\ActivityStatus::UPCOMING ? 'Próxima Actividad' : 'Última Actividad' }}
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-12 border-2 border-gray-100 rounded-2xl shadow-sm overflow-hidden group hover:border-red-300 transition-all bg-white">
+            <div class="sm:col-span-5 h-64 sm:h-auto min-h-[240px] relative bg-gray-100 overflow-hidden flex items-center justify-center">
+                <img src="{{ $featuredActivity->image }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ $featuredActivity->title }}">
             </div>
-            <div class="p-8 flex flex-col justify-between flex-grow">
+            <div class="sm:col-span-7 p-6 sm:p-8 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center text-xs font-bold text-red-600 uppercase mb-2">
-                        <span class="bg-red-100 px-2 py-1 rounded mr-2">Destacado</span>
+                        <span class="bg-red-100 text-red-700 px-2.5 py-1 rounded-full mr-2">
+                            {{ $featuredActivity->status === \App\Enums\ActivityStatus::UPCOMING ? 'Próximamente' : 'Destacado' }}
+                        </span>
                         Equipo FUDOUNAR
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-900 leading-tight">{{ $latestActivity->title }}</h3>
-                    <p class="text-gray-600 text-sm mt-2 line-clamp-3">{{ $latestActivity->description }}</p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight mb-3">
+                        {{ $featuredActivity->title }}
+                    </h3>
+                    <p class="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">
+                        {{ strip_tags($featuredActivity->description) }}
+                    </p>
                 </div>
-                <a href="{{ route('activities.show', $latestActivity->slug) }}" class="inline-flex items-center text-red-600 font-bold hover:text-red-800 transition">
-                    Leer más actividad
-                    <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </a>
+                <div class="pt-2">
+                    <a href="{{ route('activities.show', $featuredActivity->slug) }}" class="inline-flex items-center text-red-600 font-bold hover:text-red-800 transition">
+                        Leer más actividad
+                        <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -105,11 +118,13 @@
             @forelse ($realizedActivities as $activity)
                 <article class="bg-white border rounded-xl shadow-sm overflow-hidden group hover:border-blue-300 transition-all flex flex-col h-full">
                     <div class="h-48 overflow-hidden bg-gray-100 flex items-center justify-center">
-                        <img src="{{ $activity->image }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500">
+                        <img src="{{ $activity->image }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ $activity->title }}">
                     </div>
                     <div class="p-5 flex flex-col flex-grow">
                         <h3 class="font-bold text-gray-900 mb-2 leading-tight">{{ $activity->title }}</h3>
-                        <p class="text-gray-600 text-xs mb-4 flex-grow line-clamp-2">{{ $activity->description }}</p>
+                        <p class="text-gray-600 text-xs mb-4 flex-grow line-clamp-2">
+                            {{ strip_tags($activity->description) }}
+                        </p>
                         <a href="{{ route('activities.show', $activity->slug) }}" class="text-blue-600 font-bold text-sm mt-auto">Leer más &rarr;</a>
                     </div>
                 </article>

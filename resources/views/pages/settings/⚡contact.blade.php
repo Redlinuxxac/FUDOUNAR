@@ -11,6 +11,8 @@ new #[Title('Contact Settings')] class extends Component {
     public string $address = '';
     public string $google_maps_url = '';
     public string $adsense_id = '';
+    public string $google_analytics_id = '';
+    public string $google_search_console_id = '';
     public string $facebook_url = '';
     public bool $is_facebook_active = true;
     public string $instagram_url = '';
@@ -38,6 +40,8 @@ new #[Title('Contact Settings')] class extends Component {
         $this->address = $settings->address ?? '';
         $this->google_maps_url = $settings->google_maps_url ?? '';
         $this->adsense_id = $settings->adsense_id ?? '';
+        $this->google_analytics_id = $settings->google_analytics_id ?? '';
+        $this->google_search_console_id = $settings->google_search_console_id ?? '';
         $this->facebook_url = $settings->facebook_url ?? '';
         $this->is_facebook_active = (bool) ($settings->is_facebook_active ?? true);
         $this->instagram_url = $settings->instagram_url ?? '';
@@ -65,6 +69,8 @@ new #[Title('Contact Settings')] class extends Component {
             'address' => 'required|string',
             'google_maps_url' => 'nullable|url',
             'adsense_id' => 'nullable|string|regex:/^pub-\d+$/',
+            'google_analytics_id' => 'nullable|string|max:50',
+            'google_search_console_id' => 'nullable|string|max:150',
             'facebook_url' => 'nullable|url',
             'is_facebook_active' => 'boolean',
             'instagram_url' => 'nullable|url',
@@ -129,6 +135,16 @@ new #[Title('Contact Settings')] class extends Component {
             <flux:input wire:model="adsense_id" :label="__('Google AdSense Publisher ID')" placeholder="pub-xxxxxxxxxxxxxxxx" />
             <flux:text size="xs" class="text-neutral-500 italic">
                 * {{ __('Your Publisher ID (e.g., pub-1234567890123456). This will enable Google Ads on the website.') }}
+            </flux:text>
+
+            <flux:input wire:model="google_analytics_id" :label="__('Google Analytics ID (GA4)')" placeholder="G-XXXXXXXXXX" />
+            <flux:text size="xs" class="text-neutral-500 italic">
+                * {{ __('ID de medición de Google Analytics (ejemplo: G-1234567890) para medir el tráfico y visitantes.') }}
+            </flux:text>
+
+            <flux:input wire:model="google_search_console_id" :label="__('Google Search Console (Código de verificación)')" placeholder="ej: dXRhLXBs... o etiqueta de verificación" />
+            <flux:text size="xs" class="text-neutral-500 italic">
+                * {{ __('Código del meta tag de verificación de propiedad de Google Search Console.') }}
             </flux:text>
 
             @if($this->mapPreviewUrl)

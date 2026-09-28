@@ -1,6 +1,67 @@
 @extends('layouts.web')
 
 @section('title', 'FUDOUNAR - ' . $activity->title)
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($activity->description), 160))
+@section('canonical_url', route('activities.show', $activity->slug))
+@section('og_type', 'article')
+@section('og_title', $activity->title)
+@section('og_description', \Illuminate\Support\Str::limit(strip_tags($activity->description), 160))
+@section('og_url', route('activities.show', $activity->slug))
+@section('og_image', $activity->image_url)
+
+@section('schema')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'Event',
+    'name' => $activity->title,
+    'description' => \Illuminate\Support\Str::limit(strip_tags($activity->description), 200),
+    'image' => $activity->image_url ?? asset('img/LogoMejorado.png'),
+    'startDate' => ($activity->event_date ?? $activity->created_at)->toIso8601String(),
+    'eventAttendanceMode' => 'https://schema.org/OfflineEventAttendanceMode',
+    'eventStatus' => 'https://schema.org/EventScheduled',
+    'location' => [
+        '@type' => 'Place',
+        'name' => 'Sede FUDOUNAR',
+        'address' => [
+            '@type' => 'PostalAddress',
+            'addressCountry' => 'DO',
+        ],
+    ],
+    'organizer' => [
+        '@type' => 'Organization',
+        'name' => 'FUDOUNAR',
+        'url' => url('/'),
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+</script>
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => 'Inicio',
+            'item' => route('home'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => 'Actividades',
+            'item' => route('activities'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 3,
+            'name' => $activity->title,
+            'item' => route('activities.show', $activity->slug),
+        ],
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+</script>
+@endsection
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-8">
@@ -42,7 +103,7 @@
 
     <!-- Imagen Principal -->
     <div class="rounded-3xl overflow-hidden shadow-2xl bg-gray-100 border border-gray-200">
-        <img src="{{ $activity->image }}" class="w-full h-auto object-cover max-h-[600px]" alt="{{ $activity->title }}">
+        <img src="{{ $activity->image_url }}" class="w-full h-auto object-cover max-h-[600px]" alt="{{ $activity->title }}">
     </div>
 
     <!-- Contenido de la Actividad -->
@@ -54,7 +115,7 @@
 
     <!-- Footer de la Actividad -->
     <footer class="pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
-        <x-share-buttons :title="$activity->title" :url="route('activities.show', $activity->slug)" />
+        <x-share-buttons :title="$activity->title" :url="route('activities.show', $activity->slug)" :image="$activity->image_url" />
         <a href="{{ route('activities') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg transition flex items-center shrink-0">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Volver al catálogo

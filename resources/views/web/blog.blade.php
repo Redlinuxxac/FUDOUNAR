@@ -1,6 +1,8 @@
 @extends('layouts.web')
 
-@section('title', 'FUDOUNAR - Blog')
+@section('title', 'FUDOUNAR - Noticias, Artículos y Salud Urológica')
+@section('meta_description', 'Artículos, noticias y recomendaciones sobre salud urológica, avances médicos y novedades de la Fundación Dominicana de Urología Dr. Nelson Adames.')
+@section('canonical_url', route('blog'))
 
 @section('content')
 @php

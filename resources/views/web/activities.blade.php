@@ -1,6 +1,8 @@
 @extends('layouts.web')
 
-@section('title', 'FUDOUNAR - Todas nuestras Actividades')
+@section('title', 'FUDOUNAR - Actividades Comunitarias y Eventos Médicos')
+@section('meta_description', 'Descubre las jornadas comunitarias, conferencias, talleres y actividades de prevención de la Fundación Dominicana de Urología Dr. Nelson Adames.')
+@section('canonical_url', route('activities'))
 
 @section('content')
 @php
@@ -17,12 +19,12 @@
         @forelse ($activities as $activity)
             <article class="bg-white border rounded-xl shadow-sm overflow-hidden group hover:border-blue-300 transition-all flex flex-col h-full">
                 <div class="h-48 overflow-hidden bg-gray-100 flex items-center justify-center">
-                    <img src="{{ $activity->image }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" alt="{{ $activity->title }}">
+                    <img src="{{ $activity->image }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ $activity->title }}">
                 </div>
                 <div class="p-5 flex flex-col flex-grow">
                     <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2">Publicado: {{ $activity->created_at->diffForHumans() }}</span>
                     <h3 class="text-xl font-bold mb-3 text-gray-900 leading-tight">{{ $activity->title }}</h3>
-                    <p class="text-gray-600 text-sm mb-6 flex-grow line-clamp-3">{!! $activity->description !!}</p>
+                    <div class="text-gray-600 text-sm mb-6 flex-grow line-clamp-3 prose prose-sm max-w-none">{!! $activity->description !!}</div>
                     <a href="{{ route('activities.show', $activity->slug) }}" class="text-blue-600 font-bold flex items-center mt-auto">
                         Leer más
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>

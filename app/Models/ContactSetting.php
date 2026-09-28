@@ -101,6 +101,49 @@ class ContactSetting extends Model
     }
 
     /**
+     * Determine if Facebook sharing is active.
+     */
+    public function isFacebookShareActive(): bool
+    {
+        return (bool) ($this->is_facebook_active ?? true);
+    }
+
+    /**
+     * Determine if Twitter/X sharing is active.
+     */
+    public function isTwitterShareActive(): bool
+    {
+        return (bool) ($this->is_twitter_active ?? true);
+    }
+
+    /**
+     * Determine if WhatsApp sharing is active.
+     */
+    public function isWhatsappShareActive(): bool
+    {
+        return (bool) ($this->is_whatsapp_active ?? true);
+    }
+
+    /**
+     * Determine if LinkedIn sharing is active.
+     */
+    public function isLinkedinShareActive(): bool
+    {
+        return (bool) ($this->is_linkedin_active ?? true);
+    }
+
+    /**
+     * Determine if any social sharing network is active.
+     */
+    public function hasActiveShareNetworks(): bool
+    {
+        return $this->isWhatsappShareActive()
+            || $this->isFacebookShareActive()
+            || $this->isTwitterShareActive()
+            || $this->isLinkedinShareActive();
+    }
+
+    /**
      * Determine if any social media link is set and active.
      */
     public function hasSocialLinks(): bool

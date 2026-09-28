@@ -6,6 +6,7 @@ use App\Enums\ActivityStatus;
 use Database\Factories\ActivityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Activity extends Model
@@ -64,5 +65,29 @@ class Activity extends Model
     public function scopeActive($query)
     {
         return $query->where('status', ActivityStatus::ACTIVE);
+    }
+
+    /**
+     * Get the resolved public URL for the activity image.
+     */
+    public function getImageUrlAttribute(): string
+    {
+        if (empty($this->image)) {
+            return asset('img/LogoMejorado.png');
+        }
+
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+
+        if (str_starts_with($this->image, '/')) {
+            return asset(ltrim($this->image, '/'));
+        }
+
+        if (str_starts_with($this->image, 'storage/')) {
+            return asset($this->image);
+        }
+
+        return asset(ltrim(Storage::url($this->image), '/'));
     }
 }

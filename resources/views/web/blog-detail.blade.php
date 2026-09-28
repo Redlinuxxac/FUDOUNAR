@@ -1,6 +1,69 @@
 @extends('layouts.web')
 
 @section('title', 'FUDOUNAR - ' . $post->title)
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($post->content), 160))
+@section('canonical_url', route('blog.show', $post->slug))
+@section('og_type', 'article')
+@section('og_title', $post->title)
+@section('og_description', \Illuminate\Support\Str::limit(strip_tags($post->content), 160))
+@section('og_url', route('blog.show', $post->slug))
+@section('og_image', $post->image_url)
+
+@section('schema')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BlogPosting',
+    'headline' => $post->title,
+    'image' => $post->image_url ?? asset('img/LogoMejorado.png'),
+    'datePublished' => ($post->published_at ?? $post->created_at)->toIso8601String(),
+    'dateModified' => $post->updated_at->toIso8601String(),
+    'author' => [
+        '@type' => 'Organization',
+        'name' => 'FUDOUNAR',
+    ],
+    'publisher' => [
+        '@type' => 'Organization',
+        'name' => 'FUDOUNAR',
+        'logo' => [
+            '@type' => 'ImageObject',
+            'url' => asset('img/LogoMejorado.png'),
+        ],
+    ],
+    'description' => \Illuminate\Support\Str::limit(strip_tags($post->content), 160),
+    'mainEntityOfPage' => [
+        '@type' => 'WebPage',
+        '@id' => route('blog.show', $post->slug),
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+</script>
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => 'Inicio',
+            'item' => route('home'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => 'Blog',
+            'item' => route('blog'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 3,
+            'name' => $post->title,
+            'item' => route('blog.show', $post->slug),
+        ],
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+</script>
+@endsection
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-8">
@@ -42,7 +105,7 @@
 
     @if($post->image)
         <div class="rounded-3xl overflow-hidden shadow-2xl">
-            <img src="{{ $post->image }}" class="w-full h-auto object-cover max-h-[500px]" alt="{{ $post->title }}">
+            <img src="{{ $post->image_url }}" class="w-full h-auto object-cover max-h-[500px]" alt="{{ $post->title }}">
         </div>
     @endif
 
@@ -51,7 +114,7 @@
     </article>
 
     <footer class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <x-share-buttons :title="$post->title" :url="route('blog.show', $post->slug)" />
+        <x-share-buttons :title="$post->title" :url="route('blog.show', $post->slug)" :image="$post->image_url" />
         <a href="{{ route('blog') }}" class="bg-gray-100 hover:bg-gray-200 text-red-600 font-bold py-2 px-6 rounded-lg transition flex items-center shrink-0">
             &larr; Volver al Blog
         </a>

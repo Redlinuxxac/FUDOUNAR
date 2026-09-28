@@ -1,6 +1,8 @@
 @extends('layouts.web')
 
-@section('title', 'FUDOUNAR - Contacto')
+@section('title', 'FUDOUNAR - Contáctanos | Ubicación, Teléfono y Correo')
+@section('meta_description', 'Comunícate con la Fundación Dominicana de Urología Dr. Nelson Adames. Encuentra nuestra dirección física, teléfonos, mapa de ubicación y formulario de contacto.')
+@section('canonical_url', route('contact'))
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-12">

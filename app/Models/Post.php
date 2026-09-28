@@ -6,6 +6,7 @@ use App\Enums\PostStatus;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Post extends Model
@@ -64,5 +65,29 @@ class Post extends Model
     public function scopePublished($query)
     {
         return $query->where('status', PostStatus::PUBLISHED);
+    }
+
+    /**
+     * Get the resolved public URL for the post image.
+     */
+    public function getImageUrlAttribute(): string
+    {
+        if (empty($this->image)) {
+            return asset('img/LogoMejorado.png');
+        }
+
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+
+        if (str_starts_with($this->image, '/')) {
+            return asset(ltrim($this->image, '/'));
+        }
+
+        if (str_starts_with($this->image, 'storage/')) {
+            return asset($this->image);
+        }
+
+        return asset(ltrim(Storage::url($this->image), '/'));
     }
 }
