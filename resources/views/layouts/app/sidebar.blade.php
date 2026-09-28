@@ -21,8 +21,11 @@
                     <flux:sidebar.item icon="pencil-square" :href="route('admin.posts')" :current="request()->routeIs('admin.posts')" wire:navigate>
                         Blog
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="academic-cap" :href="route('admin.courses')" :current="request()->routeIs('admin.courses')" wire:navigate>
+                    <flux:sidebar.item icon="academic-cap" :href="route('admin.courses')" :current="request()->routeIs('admin.courses*')" wire:navigate>
                         Cursos
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="clipboard-document-check" :href="route('admin.course-registrations')" :current="request()->routeIs('admin.course-registrations*')" wire:navigate>
+                        Inscripciones
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 

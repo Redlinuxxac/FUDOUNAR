@@ -19,6 +19,8 @@ new #[Layout('layouts.app')] class extends Component {
     public $status = 'draft';
     public $modality = 'presencial';
     public $duration = 0;
+    public $capacity = 25;
+    public $reservation_days = 5;
     public $started_at = '';
     public $image; 
     public $currentImage;
@@ -31,6 +33,8 @@ new #[Layout('layouts.app')] class extends Component {
         $this->status = $course->status->value;
         $this->modality = $course->modality->value;
         $this->duration = $course->duration;
+        $this->capacity = $course->capacity ?? 25;
+        $this->reservation_days = $course->reservation_days ?? 5;
         $this->started_at = $course->started_at ? $course->started_at->format('Y-m-d\TH:i') : '';
         $this->currentImage = $course->image;
     }
@@ -41,6 +45,8 @@ new #[Layout('layouts.app')] class extends Component {
             'title' => 'required|min:3',
             'description' => 'required',
             'duration' => 'required|integer|min:1',
+            'capacity' => 'required|integer|min:1',
+            'reservation_days' => 'required|integer|min:1|max:60',
             'modality' => 'required',
             'status' => 'required',
             'started_at' => [
@@ -69,6 +75,8 @@ new #[Layout('layouts.app')] class extends Component {
             'status' => $this->status,
             'modality' => $this->modality,
             'duration' => $this->duration,
+            'capacity' => (int) $this->capacity,
+            'reservation_days' => (int) $this->reservation_days,
             'started_at' => ($this->status === 'upcoming' && $this->started_at) ? $this->started_at : null,
             'image' => $imagePath,
         ]);
@@ -107,6 +115,11 @@ new #[Layout('layouts.app')] class extends Component {
                                     <option value="{{ $mod->value }}">{{ $mod->label() }}</option>
                                 @endforeach
                             </flux:select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <flux:input type="number" wire:model="capacity" label="Aforo / Cupos Máximos" min="1" />
+                            <flux:input type="number" wire:model="reservation_days" label="Días Reserva Presencial" min="1" max="60" />
                         </div>
 
                         <flux:select wire:model.live="status" label="Estado">

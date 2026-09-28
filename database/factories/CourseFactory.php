@@ -28,6 +28,8 @@ class CourseFactory extends Factory
             'description' => $this->faker->paragraphs(2, true),
             'image' => 'https://image.pollinations.ai/prompt/educational-training-course-professional?width=800&height=600&seed='.$this->faker->numberBetween(1, 1000),
             'duration' => $this->faker->randomElement([20, 30, 40, 60]),
+            'capacity' => 25,
+            'reservation_days' => 5,
             'modality' => $this->faker->randomElement(CourseModality::cases()),
             'status' => $this->faker->randomElement(CourseStatus::cases()),
             'started_at' => $this->faker->dateTimeBetween('-1 month', '+1 month'),

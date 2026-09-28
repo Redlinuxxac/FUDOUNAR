@@ -11,3 +11,4 @@ Artisan::command('inspire', function () {
 Schedule::command('activity:activate')->everyMinute();
 Schedule::command('post:publish')->everyMinute();
 Schedule::command('course:activate')->everyMinute();
+Schedule::command('courses:release-expired-registrations')->hourly();

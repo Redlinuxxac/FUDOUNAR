@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\CourseRegistrationController;
 use App\Models\AboutPage;
 use App\Models\Activity;
 use App\Models\ContactSetting;
@@ -14,6 +15,7 @@ Route::get('/', function () {
         'slides' => Slide::active()->ordered()->get(),
     ]);
 })->name('home');
+
 
 Route::get('/ads.txt', function () {
     $adsenseId = ContactSetting::first()?->adsense_id;
@@ -46,6 +48,7 @@ Route::get('/blog/{slug}', function (string $slug) {
 })->name('blog.show');
 
 Route::view('/cursos', 'web.courses')->name('courses');
+Route::get('/cursos/inscripcion/validar/{token}', [CourseRegistrationController::class, 'verify'])->name('courses.registration.verify');
 Route::get('/cursos/{slug}', function (string $slug) {
     return view('web.course-detail', [
         'course' => Course::open()->where('slug', $slug)->firstOrFail(),
@@ -78,6 +81,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Volt::route('/courses', 'admin.courses.index')->name('admin.courses');
         Volt::route('/courses/create', 'admin.courses.create')->name('admin.courses.create');
         Volt::route('/courses/{course}/edit', 'admin.courses.edit')->name('admin.courses.edit');
+        Volt::route('/course-registrations', 'admin.course-registrations.index')->name('admin.course-registrations');
 
         // Usuarios
         Volt::route('/users', 'admin.users.index')->name('admin.users');

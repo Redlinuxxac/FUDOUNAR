@@ -16,6 +16,7 @@ new #[Layout('layouts.app')] class extends Component {
     {
         return [
             'courses' => Course::query()
+                ->with('registrations')
                 ->where('title', 'like', "%{$this->search}%")
                 ->latest()
                 ->paginate(10),
@@ -57,6 +58,7 @@ new #[Layout('layouts.app')] class extends Component {
                 <flux:table.column>Título</flux:table.column>
                 <flux:table.column>Modalidad</flux:table.column>
                 <flux:table.column>Duración</flux:table.column>
+                <flux:table.column>Cupos / Aforo</flux:table.column>
                 <flux:table.column>Estado</flux:table.column>
                 <flux:table.column>Acciones</flux:table.column>
             </flux:table.columns>
@@ -74,6 +76,14 @@ new #[Layout('layouts.app')] class extends Component {
                             </flux:badge>
                         </flux:table.cell>
                         <flux:table.cell class="text-neutral-500">{{ $course->duration }} hrs</flux:table.cell>
+                        <flux:table.cell>
+                            <div class="text-xs">
+                                <span class="font-bold {{ $course->isFull() ? 'text-red-600' : 'text-emerald-600 dark:text-emerald-400' }}">
+                                    {{ $course->activeRegistrationsCount() }} / {{ $course->capacity }}
+                                </span>
+                                <span class="text-neutral-400 block text-[11px]">({{ $course->availableSlots() }} disp.)</span>
+                            </div>
+                        </flux:table.cell>
                         <flux:table.cell>
                             <flux:badge :color="$course->status->color()" size="sm">
                                 {{ $course->status->label() }}

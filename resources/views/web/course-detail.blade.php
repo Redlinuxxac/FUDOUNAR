@@ -1,6 +1,59 @@
 @extends('layouts.web')
 
 @section('title', 'FUDOUNAR - ' . $course->title)
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($course->description), 160))
+@section('canonical_url', route('courses.show', $course->slug))
+@section('og_type', 'article')
+@section('og_title', $course->title)
+@section('og_description', \Illuminate\Support\Str::limit(strip_tags($course->description), 160))
+@section('og_url', route('courses.show', $course->slug))
+@section('og_image', $course->image_url)
+
+@section('schema')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'Course',
+    'name' => $course->title,
+    'description' => \Illuminate\Support\Str::limit(strip_tags($course->description), 200),
+    'provider' => [
+        '@type' => 'Organization',
+        'name' => 'FUDOUNAR',
+        'sameAs' => url('/'),
+    ],
+    'hasCourseInstance' => [
+        '@type' => 'CourseInstance',
+        'courseMode' => $course->modality?->label() ?? 'Presencial',
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+</script>
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => 'Inicio',
+            'item' => route('home'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => 'Cursos',
+            'item' => route('courses'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 3,
+            'name' => $course->title,
+            'item' => route('courses.show', $course->slug),
+        ],
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+</script>
+@endsection
 
 @section('content')
 <div class="max-w-5xl mx-auto space-y-12">
@@ -37,7 +90,7 @@
             </header>
 
             <div class="rounded-3xl overflow-hidden shadow-xl">
-                <img src="{{ $course->image }}" class="w-full h-auto object-cover" alt="{{ $course->title }}">
+                <img src="{{ $course->image_url }}" class="w-full h-auto object-cover" alt="{{ $course->title }}">
             </div>
 
             <section class="space-y-6">
@@ -48,7 +101,7 @@
             </section>
 
             <footer class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <x-share-buttons :title="$course->title" :url="route('courses.show', $course->slug)" />
+                <x-share-buttons :title="$course->title" :url="route('courses.show', $course->slug)" :image="$course->image_url" />
                 <a href="{{ route('courses') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg transition flex items-center shrink-0">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     Volver a Cursos
@@ -69,14 +122,10 @@
                         <span class="font-bold text-gray-900">{{ $course->started_at?->format('d/m/Y') ?? 'Próximamente' }}</span>
                     </div>
                     
-                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition transform hover:scale-[1.02] shadow-lg">
-                        Inscribirme ahora
-                    </button>
-                    
-                    <p class="text-[10px] text-center text-gray-400 uppercase tracking-widest font-bold">Inscripciones abiertas</p>
+                    <livewire:web.course-registration-modal :course="$course" />
 
                     <div class="pt-4 border-t border-gray-100">
-                        <x-share-buttons :title="$course->title" :url="route('courses.show', $course->slug)" />
+                        <x-share-buttons :title="$course->title" :url="route('courses.show', $course->slug)" :image="$course->image_url" />
                     </div>
                 </div>
             </div>
