@@ -1,7 +1,7 @@
 @extends('layouts.web')
 
-@section('title', 'FUDOUNAR - Actividades Comunitarias y Eventos Médicos')
-@section('meta_description', 'Descubre las jornadas comunitarias, conferencias, talleres y actividades de prevención de la Fundación Dominicana de Urología Dr. Nelson Adames.')
+@section('title', 'FUDOUNAR - Actividades Comunitarias y Eventos')
+@section('meta_description', 'Descubre las jornadas comunitarias, conferencias, talleres y actividades de la Fundación Dominicanos Unidos en Aruba (FUDOUNAR).')
 @section('canonical_url', route('activities'))
 
 @section('content')

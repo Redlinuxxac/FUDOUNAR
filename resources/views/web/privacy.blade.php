@@ -1,7 +1,7 @@
 @extends('layouts.web')
 
 @section('title', 'FUDOUNAR - Política de Privacidad')
-@section('meta_description', 'Conoce nuestra Política de Privacidad, el uso de cookies de Google y el tratamiento de datos personales en la Fundación Dominicana de Urología Dr. Nelson Adames.')
+@section('meta_description', 'Conoce nuestra Política de Privacidad, el uso de cookies de Google y el tratamiento de datos personales en la Fundación Dominicanos Unidos en Aruba (FUDOUNAR).')
 @section('canonical_url', route('privacy'))
 
 @section('content')
@@ -15,7 +15,7 @@
         <section>
             <h2 class="text-xl font-bold text-gray-900 mb-2">1. Información General y Responsable</h2>
             <p>
-                La <strong>Fundación Dominicana de Urología Dr. Nelson Adames (FUDOUNAR)</strong>, con domicilio en la República Dominicana, está comprometida con la protección de la privacidad y los datos personales de los usuarios que visitan nuestro sitio web oficial.
+                La <strong>Fundación Dominicanos Unidos en Aruba (FUDOUNAR)</strong>, con domicilio en Aruba, está comprometida con la protección de la privacidad y los datos personales de los usuarios que visitan nuestro sitio web oficial.
             </p>
         </section>
 
@@ -67,7 +67,7 @@
             <ul class="list-disc pl-6 space-y-1 mt-2">
                 <li>Gestionar la inscripción, confirmación y emisión de certificados de cursos.</li>
                 <li>Responder a consultas recibidas a través de la sección de contacto.</li>
-                <li>Difundir información sobre actividades benéficas, médicas y comunitarias de FUDOUNAR.</li>
+                <li>Difundir información sobre actividades benéficas, culturales, educativas y comunitarias de FUDOUNAR.</li>
             </ul>
             <p class="mt-2 font-medium">FUDOUNAR no vende, alquila ni comparte información personal con terceros con fines comerciales ajenos a nuestra misión.</p>
         </section>

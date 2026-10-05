@@ -53,7 +53,7 @@ class GoogleSeoAndLegalTest extends TestCase
         $response->assertOk();
         $response->assertSee('<meta name="description"', false);
         $response->assertSee('<link rel="canonical"', false);
-        $response->assertSee('MedicalOrganization');
+        $response->assertSee('"@type": "NGO"', false);
         $response->assertSee('Aviso sobre Cookies');
     }
 

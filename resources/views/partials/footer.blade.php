@@ -67,7 +67,7 @@
         <a href="{{ route('home') }}" class="hover:text-red-600 transition">Inicio</a>
         <a href="{{ route('about') }}" class="hover:text-red-600 transition">Quiénes Somos</a>
         <a href="{{ route('courses') }}" class="hover:text-red-600 transition">Cursos</a>
-        <a href="{{ route('blog') }}" class="hover:text-red-600 transition">Blog</a>
+        <a href="{{ route('blog') }}" class="hover:text-red-600 transition">Nuestra Voz</a>
         <a href="{{ route('contact') }}" class="hover:text-red-600 transition">Contacto</a>
         <span class="text-gray-300 hidden sm:inline">|</span>
         <a href="{{ route('privacy') }}" class="hover:text-red-600 transition font-medium">Política de Privacidad</a>

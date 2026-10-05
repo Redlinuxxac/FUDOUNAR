@@ -1,7 +1,7 @@
 @extends('layouts.web')
 
 @section('title', 'FUDOUNAR - Quiénes Somos | Nuestra Misión y Visión')
-@section('meta_description', 'Conoce la historia, misión, visión y valores de la Fundación Dominicana de Urología Dr. Nelson Adames (FUDOUNAR), comprometida con la salud y educación en urología.')
+@section('meta_description', 'Conoce la historia, misión, visión y valores de la Fundación Dominicanos Unidos en Aruba (FUDOUNAR), comprometida con el desarrollo comunitario y social.')
 @section('canonical_url', route('about'))
 
 @section('content')

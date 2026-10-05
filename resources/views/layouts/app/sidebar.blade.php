@@ -19,7 +19,7 @@
                         Actividades
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="pencil-square" :href="route('admin.posts')" :current="request()->routeIs('admin.posts')" wire:navigate>
-                        Blog
+                        Nuestra Voz
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="academic-cap" :href="route('admin.courses')" :current="request()->routeIs('admin.courses*')" wire:navigate>
                         Cursos

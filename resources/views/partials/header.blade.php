@@ -1,9 +1,20 @@
 <header id="header" class="bg-[#f0f0f0] border-b border-gray-300" x-data="{ mobileMenuOpen: false }">
     <div class="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
         <!-- Logo -->
-        <div class="flex-shrink-0">
-            <a href="{{ route('home') }}" class="flex items-center">
-                <img src="{{ asset('img/LogoMejorado.png') }}" alt="Logo Fudounar" class="h-24 sm:h-32 md:h-44 lg:h-48 w-auto object-contain mix-blend-multiply transition-all" style="height: clamp(100px, 15vw, 190px); max-height: 200px; width: auto;">
+        <div class="flex items-center flex-shrink-0">
+            <a href="{{ route('home') }}" class="flex items-center gap-3">
+                <img src="{{ asset('img/LogoMejorado.png') }}" alt="Logo Fudounar" class="h-20 sm:h-24 md:h-28 lg:h-32 w-auto object-contain mix-blend-multiply transition-all">
+                <div class="font-bold text-gray-900 tracking-tight leading-tight">
+                    <span class="block sm:hidden text-2xl font-black uppercase">
+                        <span class="text-red-600">FU</span><span class="text-[#002F6C]">DO</span><span class="text-red-600">UN</span><span class="text-[#002F6C]">AR</span>
+                    </span>
+                    <div class="hidden sm:flex flex-col text-sm sm:text-base md:text-lg lg:text-xl font-extrabold uppercase leading-tight tracking-tight">
+                        <span><span class="text-red-600">FU</span>ndación</span>
+                        <span><span class="text-[#002F6C]">DO</span>minicanos</span>
+                        <span><span class="text-red-600">UN</span>idos en</span>
+                        <span><span class="text-[#002F6C]">AR</span>uba</span>
+                    </div>
+                </div>
             </a>
         </div>
         
@@ -13,7 +24,7 @@
                 <li><a href="{{ route('home') }}" class="font-bold text-black hover:text-red-600 transition {{ request()->routeIs('home') ? 'underline decoration-red-600 decoration-2' : '' }}">Inicio</a></li>
                 <li><a href="{{ route('about') }}" class="font-bold text-black hover:text-red-600 transition {{ request()->routeIs('about') ? 'underline decoration-red-600 decoration-2' : '' }}">Quienes Somos</a></li>
                 <li><a href="{{ route('activities') }}" class="font-bold text-black hover:text-red-600 transition {{ request()->routeIs('activities') ? 'underline decoration-red-600 decoration-2' : '' }}">Actividades</a></li>
-                <li><a href="{{ route('blog') }}" class="font-bold text-black hover:text-red-600 transition {{ request()->routeIs('blog') ? 'underline decoration-red-600 decoration-2' : '' }}">Blog</a></li>
+                <li><a href="{{ route('blog') }}" class="font-bold text-black hover:text-red-600 transition {{ request()->routeIs('blog') ? 'underline decoration-red-600 decoration-2' : '' }}">Nuestra Voz</a></li>
                 <li><a href="{{ route('courses') }}" class="font-bold text-black hover:text-red-600 transition {{ request()->routeIs('courses') ? 'underline decoration-red-600 decoration-2' : '' }}">Cursos</a></li>
                 <li><a href="{{ route('contact') }}" class="font-bold text-black hover:text-red-600 transition {{ request()->routeIs('contact') ? 'underline decoration-red-600 decoration-2' : '' }}">Contacto</a></li>
             </ul>
@@ -38,7 +49,7 @@
             <a href="{{ route('home') }}" class="text-black hover:text-red-600 transition-colors {{ request()->routeIs('home') ? 'text-red-600' : '' }}">Inicio</a>
             <a href="{{ route('about') }}" class="text-black hover:text-red-600 transition-colors {{ request()->routeIs('about') ? 'text-red-600' : '' }}">Quienes Somos</a>
             <a href="{{ route('activities') }}" class="text-black hover:text-red-600 transition-colors {{ request()->routeIs('activities') ? 'text-red-600' : '' }}">Actividades</a>
-            <a href="{{ route('blog') }}" class="text-black hover:text-red-600 transition-colors {{ request()->routeIs('blog') ? 'text-red-600' : '' }}">Blog</a>
+            <a href="{{ route('blog') }}" class="text-black hover:text-red-600 transition-colors {{ request()->routeIs('blog') ? 'text-red-600' : '' }}">Nuestra Voz</a>
             <a href="{{ route('courses') }}" class="text-black hover:text-red-600 transition-colors {{ request()->routeIs('courses') ? 'text-red-600' : '' }}">Cursos</a>
             <a href="{{ route('contact') }}" class="text-black hover:text-red-600 transition-colors {{ request()->routeIs('contact') ? 'text-red-600' : '' }}">Contacto</a>
         </nav>

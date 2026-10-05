@@ -231,7 +231,7 @@
                                     type="tel" 
                                     id="phone" 
                                     wire:model="phone" 
-                                    placeholder="Ej: +58 412 1234567"
+                                    placeholder="Ej: +297 594 1234"
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
                                 >
                                 @error('phone') 

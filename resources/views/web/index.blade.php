@@ -1,7 +1,7 @@
 @extends('layouts.web')
 
-@section('title', 'FUDOUNAR - Fundación Dominicana de Urología Dr. Nelson Adames')
-@section('meta_description', 'Fundación Dominicana de Urología Dr. Nelson Adames (FUDOUNAR). Promoviendo la salud urológica, educación médica continua, cursos especializados y apoyo a la comunidad en República Dominicana.')
+@section('title', 'FUDOUNAR - Fundación Dominicanos Unidos en Aruba')
+@section('meta_description', 'Fundación Dominicanos Unidos en Aruba (FUDOUNAR). Promoviendo la integración, educación, cursos, actividades culturales y apoyo a la comunidad dominicana en Aruba.')
 @section('canonical_url', route('home'))
 
 @section('top_content')

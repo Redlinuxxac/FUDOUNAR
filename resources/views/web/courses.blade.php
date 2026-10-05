@@ -1,7 +1,7 @@
 @extends('layouts.web')
 
-@section('title', 'FUDOUNAR - Oferta Académica y Cursos Especializados')
-@section('meta_description', 'Capacítate con los cursos y programas de educación médica continua ofrecidos por FUDOUNAR. Certificación profesional y formación de vanguardia.')
+@section('title', 'FUDOUNAR - Oferta Académica y Cursos')
+@section('meta_description', 'Capacítate con los cursos y programas de formación comunitaria y profesional ofrecidos por FUDOUNAR. Certificación y desarrollo de capacidades.')
 @section('canonical_url', route('courses'))
 
 @section('content')

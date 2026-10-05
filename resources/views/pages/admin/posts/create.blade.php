@@ -67,7 +67,7 @@ new #[Layout('layouts.app')] class extends Component {
 <div class="p-6">
     <div class="mb-6">
         <flux:breadcrumbs>
-            <flux:breadcrumbs.item :href="route('admin.posts')">Blog</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item :href="route('admin.posts')">Nuestra Voz</flux:breadcrumbs.item>
             <flux:breadcrumbs.item>Nuevo Artículo</flux:breadcrumbs.item>
         </flux:breadcrumbs>
     </div>

@@ -30,7 +30,7 @@ class CourseRegistrationTest extends TestCase
         Livewire::test(CourseRegistrationModal::class, ['course' => $course])
             ->set('full_name', 'Carlos Mendoza')
             ->set('email', 'carlos@example.com')
-            ->set('phone', '+58 412 1234567')
+            ->set('phone', '+297 594 1234')
             ->call('submit')
             ->assertHasNoErrors()
             ->assertSet('submitted', true);
@@ -39,7 +39,7 @@ class CourseRegistrationTest extends TestCase
             'course_id' => $course->id,
             'full_name' => 'Carlos Mendoza',
             'email' => 'carlos@example.com',
-            'phone' => '+58 412 1234567',
+            'phone' => '+297 594 1234',
             'status' => CourseRegistrationStatus::PENDING->value,
         ]);
 
@@ -65,7 +65,7 @@ class CourseRegistrationTest extends TestCase
         Livewire::test(CourseRegistrationModal::class, ['course' => $course])
             ->set('full_name', 'Carlos Mendoza')
             ->set('email', 'carlos@example.com')
-            ->set('phone', '+58 412 1234567')
+            ->set('phone', '+297 594 1234')
             ->call('submit')
             ->assertHasErrors(['email']);
 

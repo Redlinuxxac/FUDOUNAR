@@ -51,7 +51,7 @@
         [
             '@type' => 'ListItem',
             'position' => 2,
-            'name' => 'Blog',
+            'name' => 'Nuestra Voz',
             'item' => route('blog'),
         ],
         [
@@ -76,7 +76,7 @@
             <li>
                 <div class="flex items-center">
                     <svg class="w-3 h-3 text-gray-400 mx-1" fill="currentColor" viewBox="0 0 20 20"><path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"></path></svg>
-                    <a href="{{ route('blog') }}" class="hover:text-blue-600">Blog</a>
+                    <a href="{{ route('blog') }}" class="hover:text-blue-600">Nuestra Voz</a>
                 </div>
             </li>
             <li aria-current="page">
@@ -116,7 +116,7 @@
     <footer class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
         <x-share-buttons :title="$post->title" :url="route('blog.show', $post->slug)" :image="$post->image_url" />
         <a href="{{ route('blog') }}" class="bg-gray-100 hover:bg-gray-200 text-red-600 font-bold py-2 px-6 rounded-lg transition flex items-center shrink-0">
-            &larr; Volver al Blog
+            &larr; Volver a Nuestra Voz
         </a>
     </footer>
 </div>

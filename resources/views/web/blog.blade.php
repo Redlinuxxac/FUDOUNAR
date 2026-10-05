@@ -1,7 +1,7 @@
 @extends('layouts.web')
 
-@section('title', 'FUDOUNAR - Noticias, Artículos y Salud Urológica')
-@section('meta_description', 'Artículos, noticias y recomendaciones sobre salud urológica, avances médicos y novedades de la Fundación Dominicana de Urología Dr. Nelson Adames.')
+@section('title', 'FUDOUNAR - Noticias, Artículos y Actualidad')
+@section('meta_description', 'Artículos, noticias y novedades de la Fundación Dominicanos Unidos en Aruba (FUDOUNAR).')
 @section('canonical_url', route('blog'))
 
 @section('content')
@@ -10,7 +10,7 @@
 @endphp
 <div class="space-y-12 max-w-7xl mx-auto px-4">
     <div class="text-center">
-        <h2 id="titulo-blog" class="text-4xl font-bold text-gray-800 border-b-4 border-red-600 inline-block pb-2">Nuestro Blog</h2>
+        <h2 id="titulo-blog" class="text-4xl font-bold text-gray-800 border-b-4 border-red-600 inline-block pb-2">Nuestra Voz</h2>
         <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Noticias, historias de impacto y actualizaciones sobre nuestra labor en la comunidad.</p>
     </div>
 

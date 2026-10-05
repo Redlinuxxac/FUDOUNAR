@@ -6,7 +6,7 @@
     <title>@yield('title', 'FUDOUNAR - Inicio')</title>
 
     <!-- SEO Básico y Google -->
-    <meta name="description" content="@yield('meta_description', trim($__env->yieldContent('og_description', 'Fundación Dominicana de Urología Dr. Nelson Adames - Dedicados a la salud urológica, educación médica continua y apoyo a la comunidad.')))">
+    <meta name="description" content="@yield('meta_description', trim($__env->yieldContent('og_description', config('app.name', 'Fundación Dominicanos Unidos en Aruba') . ' - Promoviendo la integración, educación, cultura y apoyo comunitario en Aruba.')))">
     <meta name="robots" content="@yield('meta_robots', 'index, follow')">
     <link rel="canonical" href="@yield('canonical_url', url()->current())">
 
@@ -18,17 +18,17 @@
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:url" content="@yield('og_url', url()->current())">
     <meta property="og:title" content="@yield('og_title', trim($__env->yieldContent('title', config('app.name', 'FUDOUNAR'))))">
-    <meta property="og:description" content="@yield('og_description', 'Fundación Dominicana de Urología Dr. Nelson Adames')">
+    <meta property="og:description" content="@yield('og_description', config('app.name', 'Fundación Dominicanos Unidos en Aruba'))">
     <meta property="og:image" content="@yield('og_image', asset('img/LogoMejorado.png'))">
     <meta property="og:image:secure_url" content="@yield('og_image', asset('img/LogoMejorado.png'))">
     <meta property="og:site_name" content="FUDOUNAR">
-    <meta property="og:locale" content="es_DO">
+    <meta property="og:locale" content="es">
 
     <!-- Twitter / X Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="@yield('og_url', url()->current())">
     <meta name="twitter:title" content="@yield('og_title', trim($__env->yieldContent('title', config('app.name', 'FUDOUNAR'))))">
-    <meta name="twitter:description" content="@yield('og_description', 'Fundación Dominicana de Urología Dr. Nelson Adames')">
+    <meta name="twitter:description" content="@yield('og_description', config('app.name', 'Fundación Dominicanos Unidos en Aruba'))">
     <meta name="twitter:image" content="@yield('og_image', asset('img/LogoMejorado.png'))">
 
     @php
@@ -59,15 +59,15 @@
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adsenseId }}" crossorigin="anonymous"></script>
     @endif
 
-    <!-- Schema.org JSON-LD para Google (Organización Médica / ONG) -->
+    <!-- Schema.org JSON-LD para Google (Organización No Gubernamental / ONG) -->
     @php
         $orgSchema = [
             '@context' => 'https://schema.org',
-            '@type' => 'MedicalOrganization',
-            'name' => 'FUDOUNAR - Fundación Dominicana de Urología Dr. Nelson Adames',
+            '@type' => 'NGO',
+            'name' => 'FUDOUNAR - ' . config('app.name', 'Fundación Dominicanos Unidos en Aruba'),
             'url' => url('/'),
             'logo' => asset('img/LogoMejorado.png'),
-            'description' => 'Fundación Dominicana de Urología Dr. Nelson Adames dedicada a la atención integral, prevención, educación e investigación en el área urológica.',
+            'description' => config('app.name', 'Fundación Dominicanos Unidos en Aruba') . ' dedicada a la integración comunitaria, educación, cultura y bienestar de la comunidad dominicana en Aruba.',
         ];
 
         if (!empty($contactSettings?->phone)) {
