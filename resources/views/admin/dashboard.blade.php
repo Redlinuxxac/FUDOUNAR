@@ -62,9 +62,51 @@
     }
 
     // =========================================================================
-    // 1. REDES SOCIALES: MÉTRICAS FILTRADAS
+    // 1. REDES SOCIALES: MÉTRICAS FILTRADAS (SOLO PLATAFORMAS ACTIVAS)
     // =========================================================================
+    $contactSettings = \App\Models\ContactSetting::first();
+
+    $availablePlatforms = [
+        'facebook' => [
+            'name' => 'Facebook',
+            'short' => 'FB',
+            'color' => '#1877F2',
+            'chartColor' => 'neonBlue',
+            'active' => $contactSettings ? $contactSettings->isFacebookShareActive() : true,
+        ],
+        'twitter' => [
+            'name' => 'X / Twitter',
+            'short' => 'X',
+            'color' => '#000000',
+            'chartColor' => 'neonViolet',
+            'active' => $contactSettings ? $contactSettings->isTwitterShareActive() : true,
+        ],
+        'linkedin' => [
+            'name' => 'LinkedIn',
+            'short' => 'In',
+            'color' => '#0A66C2',
+            'chartColor' => 'neonEmerald',
+            'active' => $contactSettings ? $contactSettings->isLinkedinShareActive() : true,
+        ],
+        'whatsapp' => [
+            'name' => 'WhatsApp',
+            'short' => 'WA',
+            'color' => '#25D366',
+            'chartColor' => 'neonOrange',
+            'active' => $contactSettings ? $contactSettings->isWhatsappShareActive() : true,
+        ],
+    ];
+
+    $activePlatforms = array_filter($availablePlatforms, fn ($p) => $p['active']);
+    $activePlatformKeys = array_keys($activePlatforms);
+
     $sharesQuery = SocialShare::query();
+    if (empty($activePlatformKeys)) {
+        $sharesQuery->whereRaw('0 = 1');
+    } else {
+        $sharesQuery->whereIn('platform', $activePlatformKeys);
+    }
+
     if ($startDate && $endDate) {
         $sharesQuery->whereBetween('created_at', [$startDate, $endDate]);
     } elseif ($startDate) {
@@ -87,11 +129,13 @@
     $linkedinShares = (int) ($sharesByPlatform['linkedin'] ?? 0);
     $whatsappShares = (int) ($sharesByPlatform['whatsapp'] ?? 0);
 
-    // =========================================================================
-    // 2. TOP 5 ACTIVIDADES (VISTAS Y COMPARTIDOS EN EL PERÍODO)
-    // =========================================================================
-    $activitiesQuery = Activity::query();
-    $activitiesQuery->withCount(['shares' => function ($q) use ($startDate, $endDate) {
+    $sharesFilter = function ($q) use ($startDate, $endDate, $activePlatformKeys) {
+        if (empty($activePlatformKeys)) {
+            $q->whereRaw('0 = 1');
+
+            return;
+        }
+        $q->whereIn('platform', $activePlatformKeys);
         if ($startDate && $endDate) {
             $q->whereBetween('created_at', [$startDate, $endDate]);
         } elseif ($startDate) {
@@ -99,7 +143,13 @@
         } elseif ($endDate) {
             $q->where('created_at', '<=', $endDate);
         }
-    }]);
+    };
+
+    // =========================================================================
+    // 2. TOP 5 ACTIVIDADES (VISTAS Y COMPARTIDOS EN EL PERÍODO)
+    // =========================================================================
+    $activitiesQuery = Activity::query();
+    $activitiesQuery->withCount(['shares' => $sharesFilter]);
 
     $topActivities = (clone $activitiesQuery)
         ->orderByDesc('views')
@@ -113,15 +163,7 @@
     // 3. TOP 10 BLOGS / NUESTRA VOZ (VISTAS Y COMPARTIDOS EN EL PERÍODO)
     // =========================================================================
     $blogsQuery = Post::query();
-    $blogsQuery->withCount(['shares' => function ($q) use ($startDate, $endDate) {
-        if ($startDate && $endDate) {
-            $q->whereBetween('created_at', [$startDate, $endDate]);
-        } elseif ($startDate) {
-            $q->where('created_at', '>=', $startDate);
-        } elseif ($endDate) {
-            $q->where('created_at', '<=', $endDate);
-        }
-    }]);
+    $blogsQuery->withCount(['shares' => $sharesFilter]);
 
     $topBlogs = (clone $blogsQuery)
         ->orderByDesc('views')
@@ -144,15 +186,7 @@
                 $q->where('created_at', '<=', $endDate);
             }
         },
-        'shares' => function ($q) use ($startDate, $endDate) {
-            if ($startDate && $endDate) {
-                $q->whereBetween('created_at', [$startDate, $endDate]);
-            } elseif ($startDate) {
-                $q->where('created_at', '>=', $startDate);
-            } elseif ($endDate) {
-                $q->where('created_at', '<=', $endDate);
-            }
-        }
+        'shares' => $sharesFilter,
     ]);
 
     $topCourses = (clone $coursesQuery)
@@ -195,6 +229,18 @@
         ->take(6)
         ->get();
 
+    $activePlatformData = [];
+    foreach ($activePlatforms as $key => $meta) {
+        $activePlatformData[] = [
+            'key' => $key,
+            'name' => $meta['name'],
+            'short' => $meta['short'],
+            'count' => (int) ($sharesByPlatform[$key] ?? 0),
+            'color' => $meta['color'],
+            'chartColor' => $meta['chartColor'],
+        ];
+    }
+
     // Dataset estructurado con datos reales filtrados
     $realAnalytics = [
         'isFiltered' => $isFiltered,
@@ -204,6 +250,7 @@
         'activityShares' => $activityShares,
         'blogShares' => $blogShares,
         'courseShares' => $courseShares,
+        'activePlatforms' => $activePlatformData,
         'platformShares' => [
             'facebook' => $facebookShares,
             'twitter' => $twitterShares,
@@ -491,56 +538,76 @@
                         </div>
                     </div>
                 </div>
+                <!-- Micro-badges / Iconos SVG de plataformas con conteo real (solo activas) -->
+                @if(count($activePlatforms) > 0)
+                    @php
+                        $colsCount = count($activePlatforms);
+                        $gridColsClass = match($colsCount) {
+                            1 => 'grid-cols-1',
+                            2 => 'grid-cols-2',
+                            3 => 'grid-cols-3',
+                            default => 'grid-cols-2 sm:grid-cols-4',
+                        };
+                    @endphp
+                    <div class="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 grid {{ $gridColsClass }} gap-1.5 text-center">
+                        @if(isset($activePlatforms['facebook']))
+                            <!-- Facebook -->
+                            <div class="flex flex-col items-center p-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                                <svg class="size-4 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                                <span class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100 mt-1" x-text="data.platformShares.facebook">
+                                    {{ $facebookShares }}
+                                </span>
+                                <span class="text-[9px] text-zinc-500 dark:text-zinc-400">FB</span>
+                            </div>
+                        @endif
 
-                <!-- Micro-badges / Iconos SVG de plataformas principales con conteo real -->
-                <div class="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 grid grid-cols-4 gap-1.5 text-center">
-                    <!-- Facebook -->
-                    <div class="flex flex-col items-center p-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                        <svg class="size-4 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                        </svg>
-                        <span class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100 mt-1" x-text="data.platformShares.facebook">
-                            {{ $facebookShares }}
-                        </span>
-                        <span class="text-[9px] text-zinc-500 dark:text-zinc-400">FB</span>
+                        @if(isset($activePlatforms['twitter']))
+                            <!-- X / Twitter -->
+                            <div class="flex flex-col items-center p-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                                <svg class="size-4 text-zinc-900 dark:text-zinc-100" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                </svg>
+                                <span class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100 mt-1" x-text="data.platformShares.twitter">
+                                    {{ $twitterShares }}
+                                </span>
+                                <span class="text-[9px] text-zinc-500 dark:text-zinc-400">X</span>
+                            </div>
+                        @endif
+
+                        @if(isset($activePlatforms['linkedin']))
+                            <!-- LinkedIn -->
+                            <div class="flex flex-col items-center p-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                                <svg class="size-4 text-[#0A66C2]" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.75-1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                </svg>
+                                <span class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100 mt-1" x-text="data.platformShares.linkedin">
+                                    {{ $linkedinShares }}
+                                </span>
+                                <span class="text-[9px] text-zinc-500 dark:text-zinc-400">In</span>
+                            </div>
+                        @endif
+
+                        @if(isset($activePlatforms['whatsapp']))
+                            <!-- WhatsApp -->
+                            <div class="flex flex-col items-center p-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                                <svg class="size-4 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12.031 0C5.396 0 .029 5.367.029 12.002c0 2.122.554 4.195 1.607 6.018L0 24l6.167-1.618a11.97 11.97 0 005.864 1.523h.005c6.635 0 12.002-5.367 12.002-12.002C24.038 5.367 18.667 0 12.031 0zm0 21.908a9.92 9.92 0 01-5.064-1.385l-.364-.216-3.763.987 1.004-3.667-.238-.378a9.907 9.907 0 01-1.517-5.247c0-5.474 4.453-9.927 9.932-9.927 2.652 0 5.145 1.033 7.02 2.908a9.88 9.88 0 012.908 7.019c0 5.475-4.453 9.906-9.918 9.906z"/>
+                                </svg>
+                                <span class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100 mt-1" x-text="data.platformShares.whatsapp">
+                                    {{ $whatsappShares }}
+                                </span>
+                                <span class="text-[9px] text-zinc-500 dark:text-zinc-400">WA</span>
+                            </div>
+                        @endif
                     </div>
-
-                    <!-- X / Twitter -->
-                    <div class="flex flex-col items-center p-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                        <svg class="size-4 text-zinc-900 dark:text-zinc-100" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                        </svg>
-                        <span class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100 mt-1" x-text="data.platformShares.twitter">
-                            {{ $twitterShares }}
-                        </span>
-                        <span class="text-[9px] text-zinc-500 dark:text-zinc-400">X</span>
+                @else
+                    <div class="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 text-center">
+                        <span class="text-[11px] text-zinc-400 dark:text-zinc-500">Sin redes sociales activas</span>
                     </div>
-
-                    <!-- LinkedIn -->
-                    <div class="flex flex-col items-center p-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                        <svg class="size-4 text-[#0A66C2]" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                        </svg>
-                        <span class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100 mt-1" x-text="data.platformShares.linkedin">
-                            {{ $linkedinShares }}
-                        </span>
-                        <span class="text-[9px] text-zinc-500 dark:text-zinc-400">In</span>
-                    </div>
-
-                    <!-- WhatsApp -->
-                    <div class="flex flex-col items-center p-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                        <svg class="size-4 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12.031 0C5.396 0 .029 5.367.029 12.002c0 2.122.554 4.195 1.607 6.018L0 24l6.167-1.618a11.97 11.97 0 005.864 1.523h.005c6.635 0 12.002-5.367 12.002-12.002C24.038 5.367 18.667 0 12.031 0zm0 21.908a9.92 9.92 0 01-5.064-1.385l-.364-.216-3.763.987 1.004-3.667-.238-.378a9.907 9.907 0 01-1.517-5.247c0-5.474 4.453-9.927 9.932-9.927 2.652 0 5.145 1.033 7.02 2.908a9.88 9.88 0 012.908 7.019c0 5.475-4.453 9.906-9.918 9.906z"/>
-                        </svg>
-                        <span class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100 mt-1" x-text="data.platformShares.whatsapp">
-                            {{ $whatsappShares }}
-                        </span>
-                        <span class="text-[9px] text-zinc-500 dark:text-zinc-400">WA</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PANEL 2: Top 5 Actividades (Vistas) -->
+                @endif
+            </div><!-- PANEL 2: Top 5 Actividades (Vistas) -->
             <div class="rounded-xl bg-white dark:bg-zinc-900/90 border border-zinc-200/80 dark:border-zinc-800 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between">
@@ -719,7 +786,7 @@
                             <h3 class="text-sm font-semibold text-zinc-900 dark:text-white">
                                 Desglose por Plataforma
                             </h3>
-                            <span class="text-[11px] font-medium text-zinc-400">Redes Sociales</span>
+                            <span class="text-[11px] font-medium text-zinc-400">Redes Activas</span>
                         </div>
                         <div wire:ignore class="relative h-56 w-full flex items-center justify-center">
                             <canvas id="chartPlatformDonut"></canvas>
@@ -838,7 +905,7 @@
                                 <h3 class="text-sm font-semibold text-zinc-900 dark:text-white">
                                     Blogs Más Compartidos
                                 </h3>
-                                <p class="text-xs text-zinc-500 dark:text-zinc-400">Artículos difundidos en WhatsApp, FB, X y LinkedIn</p>
+                                <p class="text-xs text-zinc-500 dark:text-zinc-400">Artículos con mayor difusión en las redes sociales activas</p>
                             </div>
                             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-500/10 text-orange-600 dark:text-orange-400">Horizontal</span>
                         </div>
@@ -901,6 +968,7 @@
                     blogShares: 0,
                     courseShares: 0,
                     platformShares: { facebook: 0, twitter: 0, linkedin: 0, whatsapp: 0 },
+                    activePlatforms: [],
                     topActivities: [],
                     topBlogs: [],
                     topCourses: [],
@@ -1003,34 +1071,70 @@
                     // ==========================================
                     const ctxPlatform = document.getElementById('chartPlatformDonut');
                     if (ctxPlatform) {
-                        const pf = this.data.platformShares || {};
-                        const platformData = [pf.facebook || 0, pf.twitter || 0, pf.linkedin || 0, pf.whatsapp || 0];
-                        const hasData = platformData.some(v => v > 0);
+                        const activeList = this.data.activePlatforms || [];
+                        const colorMap = {
+                            neonBlue: t.neonBlue,
+                            neonViolet: t.neonViolet,
+                            neonEmerald: t.neonEmerald,
+                            neonOrange: t.neonOrange,
+                        };
 
-                        this.charts.platform = new Chart(ctxPlatform, {
-                            type: 'doughnut',
-                            data: {
-                                labels: hasData ? ['Facebook', 'X / Twitter', 'LinkedIn', 'WhatsApp'] : ['Sin compartidos'],
-                                datasets: [{
-                                    data: hasData ? platformData : [1],
-                                    backgroundColor: hasData 
-                                        ? [t.neonBlue, t.neonViolet, t.neonEmerald, t.neonOrange]
-                                        : [t.mutedOther],
-                                    borderWidth: 2,
-                                    borderColor: this.isDarkMode() ? '#18181b' : '#ffffff',
-                                    hoverOffset: 6
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                cutout: '70%',
-                                plugins: {
-                                    ...commonPlugins,
-                                    legend: { position: 'bottom', labels: { color: t.textColor, boxWidth: 10, font: { size: 10 } } }
+                        if (activeList.length === 0) {
+                            this.charts.platform = new Chart(ctxPlatform, {
+                                type: 'doughnut',
+                                data: {
+                                    labels: ['Sin redes activas'],
+                                    datasets: [{
+                                        data: [1],
+                                        backgroundColor: [t.mutedOther],
+                                        borderWidth: 2,
+                                        borderColor: this.isDarkMode() ? '#18181b' : '#ffffff'
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    cutout: '70%',
+                                    plugins: {
+                                        ...commonPlugins,
+                                        legend: { position: 'bottom', labels: { color: t.textColor, boxWidth: 10, font: { size: 10 } } }
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        } else {
+                            const labels = activeList.map(p => p.name);
+                            const platformData = activeList.map(p => {
+                                if (this.data.platformShares && this.data.platformShares[p.key] !== undefined) {
+                                    return this.data.platformShares[p.key];
+                                }
+                                return p.count || 0;
+                            });
+                            const platformColors = activeList.map(p => colorMap[p.chartColor] || p.color || t.neonBlue);
+                            const hasData = platformData.some(v => v > 0);
+
+                            this.charts.platform = new Chart(ctxPlatform, {
+                                type: 'doughnut',
+                                data: {
+                                    labels: hasData ? labels : ['Sin compartidos'],
+                                    datasets: [{
+                                        data: hasData ? platformData : [1],
+                                        backgroundColor: hasData ? platformColors : [t.mutedOther],
+                                        borderWidth: 2,
+                                        borderColor: this.isDarkMode() ? '#18181b' : '#ffffff',
+                                        hoverOffset: 6
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    cutout: '70%',
+                                    plugins: {
+                                        ...commonPlugins,
+                                        legend: { position: 'bottom', labels: { color: t.textColor, boxWidth: 10, font: { size: 10 } } }
+                                    }
+                                }
+                            });
+                        }
                     }
 
                     // ==========================================

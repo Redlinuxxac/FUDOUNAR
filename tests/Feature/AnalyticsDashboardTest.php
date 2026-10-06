@@ -7,6 +7,7 @@ use App\Enums\CourseRegistrationStatus;
 use App\Enums\CourseStatus;
 use App\Enums\PostStatus;
 use App\Models\Activity;
+use App\Models\ContactSetting;
 use App\Models\Course;
 use App\Models\CourseRegistration;
 use App\Models\Post;
@@ -252,5 +253,82 @@ class AnalyticsDashboardTest extends TestCase
         // El total de solicitudes en los últimos 7 días debe ser 1 (Ana), no 2 (Pedro fue hace 50 días)
         $response->assertSee('1 solicitudes');
         $response->assertSee('Curso de Marketing Digital');
+    }
+
+    public function test_dashboard_only_measures_and_displays_active_social_networks(): void
+    {
+        $user = User::factory()->create();
+
+        // Configurar solo Facebook y WhatsApp como activos
+        ContactSetting::create([
+            'email' => 'info@fudounar.org',
+            'phone' => '+297 123 4567',
+            'address' => 'Oranjestad, Aruba',
+            'is_facebook_active' => true,
+            'is_whatsapp_active' => true,
+            'is_twitter_active' => false,
+            'is_linkedin_active' => false,
+        ]);
+
+        $post = Post::create([
+            'title' => 'Blog con metricas de redes',
+            'slug' => 'blog-metricas-redes',
+            'content' => 'Contenido',
+            'status' => PostStatus::PUBLISHED,
+            'views' => 100,
+            'published_at' => now(),
+        ]);
+
+        // Crear compartidos en las 4 plataformas
+        SocialShare::create([
+            'shareable_type' => Post::class,
+            'shareable_id' => $post->id,
+            'platform' => 'facebook',
+        ]);
+        SocialShare::create([
+            'shareable_type' => Post::class,
+            'shareable_id' => $post->id,
+            'platform' => 'whatsapp',
+        ]);
+        SocialShare::create([
+            'shareable_type' => Post::class,
+            'shareable_id' => $post->id,
+            'platform' => 'twitter', // Inactiva
+        ]);
+        SocialShare::create([
+            'shareable_type' => Post::class,
+            'shareable_id' => $post->id,
+            'platform' => 'linkedin', // Inactiva
+        ]);
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        // Las activas deben tener sus badges
+        $response->assertSee('FB');
+        $response->assertSee('WA');
+        // Las inactivas NO deben mostrar sus badges
+        $response->assertDontSee('>X</span>', false);
+        $response->assertDontSee('>In</span>', false);
+    }
+
+    public function test_dashboard_handles_all_social_networks_inactive(): void
+    {
+        $user = User::factory()->create();
+
+        ContactSetting::create([
+            'email' => 'info@fudounar.org',
+            'phone' => '+297 123 4567',
+            'address' => 'Oranjestad, Aruba',
+            'is_facebook_active' => false,
+            'is_whatsapp_active' => false,
+            'is_twitter_active' => false,
+            'is_linkedin_active' => false,
+        ]);
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertSee('Sin redes sociales activas');
     }
 }
