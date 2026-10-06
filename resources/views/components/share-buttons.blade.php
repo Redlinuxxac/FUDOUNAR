@@ -4,6 +4,7 @@
     'description' => '',
     'image' => null,
     'contact' => null,
+    'model' => null,
 ])
 
 @php
@@ -19,10 +20,49 @@
     $showLinkedin = $contactSettings ? $contactSettings->isLinkedinShareActive() : true;
 
     $hasAnySocial = $showWhatsapp || $showFacebook || $showTwitter || $showLinkedin;
+
+    $itemType = null;
+    $itemId = null;
+    if ($model) {
+        if ($model instanceof \App\Models\Activity) { $itemType = 'activity'; $itemId = $model->id; }
+        elseif ($model instanceof \App\Models\Post) { $itemType = 'post'; $itemId = $model->id; }
+        elseif ($model instanceof \App\Models\Course) { $itemType = 'course'; $itemId = $model->id; }
+    } else {
+        $path = request()->path();
+        if (str_contains($path, 'actividades/')) {
+            $slug = basename($path);
+            $found = \App\Models\Activity::where('slug', $slug)->first();
+            if ($found) { $itemType = 'activity'; $itemId = $found->id; }
+        } elseif (str_contains($path, 'blog/')) {
+            $slug = basename($path);
+            $found = \App\Models\Post::where('slug', $slug)->first();
+            if ($found) { $itemType = 'post'; $itemId = $found->id; }
+        } elseif (str_contains($path, 'cursos/')) {
+            $slug = basename($path);
+            $found = \App\Models\Course::where('slug', $slug)->first();
+            if ($found) { $itemType = 'course'; $itemId = $found->id; }
+        }
+    }
 @endphp
 
 @if($hasAnySocial)
-<div {{ $attributes->merge(['class' => 'flex flex-wrap items-center gap-2']) }} x-data="{ copied: false }">
+<div {{ $attributes->merge(['class' => 'flex flex-wrap items-center gap-2']) }} 
+     x-data="{ 
+         copied: false,
+         trackShare(platform) {
+             const type = '{{ $itemType }}';
+             const id = '{{ $itemId }}';
+             if (!type || !id) return;
+             fetch('{{ route('track.share') }}', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                 },
+                 body: JSON.stringify({ type: type, id: parseInt(id), platform: platform })
+             }).catch(() => {});
+         }
+     }">
     <span class="text-xs font-bold text-gray-500 uppercase tracking-wider mr-1 flex items-center gap-1.5">
         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
@@ -82,6 +122,7 @@
     @if($showWhatsapp)
         <!-- WhatsApp -->
         <a href="https://api.whatsapp.com/send?text={{ $whatsappText }}" 
+           @click="trackShare('whatsapp')"
            target="_blank" 
            rel="noopener noreferrer" 
            title="Compartir en WhatsApp"
@@ -96,6 +137,7 @@
     @if($showFacebook)
         <!-- Facebook -->
         <a href="https://www.facebook.com/sharer/sharer.php?u={{ $encodedUrl }}" 
+           @click="trackShare('facebook')"
            target="_blank" 
            rel="noopener noreferrer" 
            title="Compartir en Facebook"
@@ -110,6 +152,7 @@
     @if($showTwitter)
         <!-- X (Twitter) -->
         <a href="https://twitter.com/intent/tweet?url={{ $encodedUrl }}&text={{ $encodedTitle }}" 
+           @click="trackShare('twitter')"
            target="_blank" 
            rel="noopener noreferrer" 
            title="Compartir en X"
@@ -124,6 +167,7 @@
     @if($showLinkedin)
         <!-- LinkedIn -->
         <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $encodedUrl }}" 
+           @click="trackShare('linkedin')"
            target="_blank" 
            rel="noopener noreferrer" 
            title="Compartir en LinkedIn"

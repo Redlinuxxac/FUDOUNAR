@@ -8,6 +8,8 @@ use App\Models\ContactSetting;
 use App\Models\Course;
 use App\Models\Post;
 use App\Models\Slide;
+use App\Models\SocialShare;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -39,25 +41,60 @@ Route::get('/quienes-somos', function () {
 
 Route::view('/actividades', 'web.activities')->name('activities');
 Route::get('/actividades/{slug}', function (string $slug) {
+    $activity = Activity::active()->where('slug', $slug)->firstOrFail();
+    $activity->increment('views');
+
     return view('web.activity-detail', [
-        'activity' => Activity::active()->where('slug', $slug)->firstOrFail(),
+        'activity' => $activity,
     ]);
 })->name('activities.show');
 
 Route::view('/blog', 'web.blog')->name('blog');
 Route::get('/blog/{slug}', function (string $slug) {
+    $post = Post::published()->where('slug', $slug)->firstOrFail();
+    $post->increment('views');
+
     return view('web.blog-detail', [
-        'post' => Post::published()->where('slug', $slug)->firstOrFail(),
+        'post' => $post,
     ]);
 })->name('blog.show');
 
 Route::view('/cursos', 'web.courses')->name('courses');
 Route::get('/cursos/inscripcion/validar/{token}', [CourseRegistrationController::class, 'verify'])->name('courses.registration.verify');
 Route::get('/cursos/{slug}', function (string $slug) {
+    $course = Course::open()->where('slug', $slug)->firstOrFail();
+    $course->increment('views');
+
     return view('web.course-detail', [
-        'course' => Course::open()->where('slug', $slug)->firstOrFail(),
+        'course' => $course,
     ]);
 })->name('courses.show');
+
+Route::post('/track-share', function (Request $request) {
+    $validated = $request->validate([
+        'type' => 'required|string|in:activity,post,course',
+        'id' => 'required|integer',
+        'platform' => 'required|string|in:facebook,twitter,linkedin,whatsapp,native',
+    ]);
+
+    $modelClass = match ($validated['type']) {
+        'activity' => Activity::class,
+        'post' => Post::class,
+        'course' => Course::class,
+    };
+
+    $item = $modelClass::find($validated['id']);
+    if ($item) {
+        SocialShare::create([
+            'shareable_type' => $modelClass,
+            'shareable_id' => $item->id,
+            'platform' => $validated['platform'],
+            'ip_address' => $request->ip(),
+        ]);
+    }
+
+    return response()->json(['success' => true]);
+})->name('track.share');
 
 Route::get('/contacto', function () {
     return view('web.contact', [

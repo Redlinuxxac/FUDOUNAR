@@ -6,6 +6,7 @@ use App\Enums\ActivityStatus;
 use Database\Factories\ActivityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -20,13 +21,20 @@ class Activity extends Model
         'description',
         'image',
         'status',
+        'views',
         'started_at',
     ];
 
     protected $casts = [
         'status' => ActivityStatus::class,
+        'views' => 'integer',
         'started_at' => 'datetime',
     ];
+
+    public function shares(): MorphMany
+    {
+        return $this->morphMany(SocialShare::class, 'shareable');
+    }
 
     protected static function boot()
     {

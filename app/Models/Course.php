@@ -9,6 +9,7 @@ use Database\Factories\CourseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -27,6 +28,7 @@ class Course extends Model
         'reservation_days',
         'modality',
         'status',
+        'views',
         'started_at',
     ];
 
@@ -35,8 +37,14 @@ class Course extends Model
         'reservation_days' => 'integer',
         'status' => CourseStatus::class,
         'modality' => CourseModality::class,
+        'views' => 'integer',
         'started_at' => 'datetime',
     ];
+
+    public function shares(): HasMany|MorphMany
+    {
+        return $this->morphMany(SocialShare::class, 'shareable');
+    }
 
     protected static function boot()
     {

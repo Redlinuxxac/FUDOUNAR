@@ -6,6 +6,7 @@ use App\Enums\PostStatus;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -20,13 +21,20 @@ class Post extends Model
         'content',
         'image',
         'status',
+        'views',
         'published_at',
     ];
 
     protected $casts = [
         'status' => PostStatus::class,
+        'views' => 'integer',
         'published_at' => 'datetime',
     ];
+
+    public function shares(): MorphMany
+    {
+        return $this->morphMany(SocialShare::class, 'shareable');
+    }
 
     protected static function boot()
     {
